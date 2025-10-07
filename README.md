@@ -768,8 +768,6 @@ If you believe in a future where everyone owns their data and AI serves all huma
 
 ---
 
-![Footer](https://via.placeholder.com/1200x100/1f2937/667eea?text=Empowering+Communities+|+Eliminating+Bias+|+Decentralizing+Data)
-
 **M.E.R.I.D.I.A.N.** - *Where Your Data Meets Its True Value*
 
 </div>
