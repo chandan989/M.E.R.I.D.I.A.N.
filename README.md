@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🌐 M.E.R.I.D.I.A.N.
+# M.E.R.I.D.I.A.N.
+
+<img src="./logo.png" alt="M.E.R.I.D.I.A.N. Logo" width="120" />
 
 ### Monetized Equitable Representational & Immutable Data Interface & Analytics Network
 
