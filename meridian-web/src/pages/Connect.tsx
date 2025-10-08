@@ -14,19 +14,24 @@ import {
   User,
   Database,
 } from "lucide-react";
+import { useDid } from "../contexts/DidContext";
 
 const Connect = () => {
   const navigate = useNavigate();
+  const { setDid } = useDid();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState<"provider" | "buyer" | null>(null);
+  const [walletId, setWalletId] = useState<string | null>(null);
 
   const handleConnectWallet = () => {
     setLoading(true);
     // Simulate wallet connection
     setTimeout(() => {
+      const simulatedId = `did:web5:${Date.now()}`;
+      setWalletId(simulatedId);
+      setDid(simulatedId);
       setLoading(false);
-      setStep(2);
       toast.success("Web5 wallet connected successfully!");
     }, 2000);
   };
@@ -55,7 +60,7 @@ const Connect = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 py-12">
+    <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl">
           {/* Header */}
@@ -133,13 +138,18 @@ const Connect = () => {
                 <Button
                   size="lg"
                   className="w-full"
-                  onClick={handleConnectWallet}
+                  onClick={walletId ? () => setStep(2) : handleConnectWallet}
                   disabled={loading}
                 >
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Connecting...
+                    </>
+                  ) : walletId ? (
+                    <>
+                      <span className="truncate">{walletId}</span>
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   ) : (
                     <>

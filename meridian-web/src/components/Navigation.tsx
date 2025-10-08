@@ -1,16 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search, Bell, Wallet } from "lucide-react";
+import { Menu, X, Wallet } from "lucide-react";
 import { useState } from "react";
+import { useDid } from "../contexts/DidContext";
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { did } = useDid();
 
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
-    { path: "/", label: "Home" },
     { path: "/marketplace", label: "Marketplace" },
     { path: "/dashboard", label: "Dashboard" },
     { path: "/about", label: "About" },
@@ -33,9 +34,9 @@ const Navigation = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-[#FD6602] ${
+                className={`text-sm font-medium transition-colors hover:text-[#FD4102] ${
                   isActive(link.path)
-                    ? "text-[#FD6602] font-bold"
+                    ? "text-[#FD4102] font-bold"
                     : "text-white"
                 }`}
               >
@@ -46,24 +47,25 @@ const Navigation = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="icon" className="hidden text-white hover:bg-orange-700 md:inline-flex">
-              <Search className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="hidden text-white hover:bg-orange-700 md:inline-flex">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <Link to="/connect">
-              <Button variant="secondary" className="hidden md:inline-flex">
-                <Wallet className="mr-2 h-4 w-4" />
-                Connect Wallet
-              </Button>
-            </Link>
+            {did ? (
+              <div className="hidden md:flex items-center space-x-2 rounded-md bg-gray-800 px-3 py-2 text-sm font-medium text-white">
+                <Wallet className="h-4 w-4 text-[#FD4102]" />
+                <span className="truncate">{did}</span>
+              </div>
+            ) : (
+              <Link to="/connect">
+                <Button variant="secondary" className="hidden md:inline-flex">
+                  <Wallet className="mr-2 h-4 w-4" />
+                  Connect Wallet
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile menu button */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-orange-700 md:hidden"
+              className="text-white hover:bg-red-700 md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -79,22 +81,29 @@ const Navigation = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`px-2 py-2 text-sm font-medium transition-colors hover:text-orange-200 ${
+                  className={`px-2 py-2 text-sm font-medium transition-colors hover:text-red-200 ${
                     isActive(link.path)
                       ? "text-white font-bold"
-                      : "text-orange-100"
+                      : "text-red-100"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Link to="/connect" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="secondary" className="w-full">
-                  <Wallet className="mr-2 h-4 w-4" />
-                  Connect Wallet
-                </Button>
-              </Link>
+              {did ? (
+                <div className="flex items-center space-x-2 rounded-md bg-gray-800 px-3 py-2 text-sm font-medium text-white">
+                  <Wallet className="h-4 w-4 text-[#FD4102]" />
+                  <span className="truncate">{did}</span>
+                </div>
+              ) : (
+                <Link to="/connect" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="secondary" className="w-full">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    Connect Wallet
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         )}

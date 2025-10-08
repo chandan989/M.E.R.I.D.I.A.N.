@@ -129,7 +129,7 @@ const Scene = () => {
 
     const flow = oneMinus(smoothstep(0, 0.02, abs(depth.sub(uProgress))));
 
-    const mask = dot.mul(flow).mul(vec3(10, 0, 0));
+    const mask = dot.mul(flow).mul(vec3(1, 0, 0).normalize().mul(10.0));
 
     const final = blendScreen(tMap, mask);
 
@@ -204,7 +204,7 @@ export const HeroFuturistic = () => {
   return (
     <div className="h-svh bg-black">
       <div className="h-svh uppercase items-center w-full absolute z-50 pointer-events-none px-10 flex justify-start pt-80 flex-col">
-        <div className="text-3xl md:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold">
+        <div className="text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold">
           <div className="flex space-x-2 lg:space-x-6 overflow-hidden text-white">
             {titleWords.map((word, index) => (
               <div
@@ -217,7 +217,7 @@ export const HeroFuturistic = () => {
             ))}
           </div>
         </div>
-        <div className="text-xs md:text-xl xl:text-2xl 2xl:text-3xl mt-2 overflow-hidden text-white font-bold">
+        <div className="text-lg md:text-xl xl:text-2xl 2xl:text-3xl mt-2 overflow-hidden text-white font-bold">
           <div
             className={subtitleVisible ? 'fade-in-subtitle' : ''}
             style={{ animationDelay: `${titleWords.length * 0.13 + 0.2 + subtitleDelay}s`, opacity: subtitleVisible ? undefined : 0 }}

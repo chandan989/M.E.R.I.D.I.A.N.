@@ -2,8 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LoadingProvider } from "./contexts/LoadingContext";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
 import Marketplace from "./pages/Marketplace";
@@ -16,17 +15,30 @@ import Docs from "./pages/Docs";
 import FAQ from "./pages/FAQ";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
+import { ReactNode } from "react";
+import { DidProvider } from "./contexts/DidContext";
 
 const queryClient = new QueryClient();
+
+const LayoutWrapper = ({ children }: { children: ReactNode }) => {
+  const location = useLocation();
+  const noLayoutRoutes = ["/connect"];
+
+  if (noLayoutRoutes.includes(location.pathname)) {
+    return <>{children}</>;
+  }
+
+  return <Layout>{children}</Layout>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <LoadingProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <DidProvider>
+          <LayoutWrapper>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/marketplace" element={<Marketplace />} />
@@ -38,12 +50,12 @@ const App = () => (
               <Route path="/docs" element={<Docs />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/support" element={<Support />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL \"*\" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </Layout>
-        </BrowserRouter>
-      </LoadingProvider>
+          </LayoutWrapper>
+        </DidProvider>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

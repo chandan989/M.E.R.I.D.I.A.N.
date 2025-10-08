@@ -13,33 +13,13 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import { Suspense, lazy, useEffect } from "react";
-import { useLoading } from "@/contexts/LoadingContext";
+import { Suspense, lazy } from "react";
 import Loading from "@/components/ui/loading";
+import LandingPageNavigation from "@/components/LandingPageNavigation";
 
 const HeroFuturistic = lazy(() => import("@/components/ui/hero-futuristic"));
 
-// Wrapper component that signals when HeroFuturistic has loaded
-const HeroWithLoadingComplete = () => {
-  const { setIsInitialLoading } = useLoading();
-
-  useEffect(() => {
-    // This runs after the lazy component has loaded and mounted
-    setIsInitialLoading(false);
-  }, [setIsInitialLoading]);
-
-  return <HeroFuturistic />;
-};
-
 const Landing = () => {
-  const { setIsInitialLoading } = useLoading();
-
-  useEffect(() => {
-    // Reset loading state to true when navigating back to home
-    return () => {
-      setIsInitialLoading(true);
-    };
-  }, [setIsInitialLoading]);
   const features = [
     {
       icon: Shield,
@@ -105,18 +85,21 @@ const Landing = () => {
 
   return (
     <div className="animate-fade-in">
+      <LandingPageNavigation />
       {/* Hero Section */}
-      <Suspense fallback={<Loading />}>
-        <HeroWithLoadingComplete />
-      </Suspense>
+      <section id="home">
+        <Suspense fallback={<Loading />}>
+          <HeroFuturistic />
+        </Suspense>
+      </section>
 
       {/* Problem Statement */}
-      <section className="py-16 md:py-24">
+      <section id="problem" className="bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We\'re Solving</h2>
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We're Solving</h2>
             <p className="text-lg text-muted-foreground">
-              Current AI systems are built on biased, exploited data. It\'s time for change.
+              Current AI systems are built on biased, exploited data. It's time for change.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2">
@@ -132,10 +115,10 @@ const Landing = () => {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-warning/20">
+            <Card className="border-destructive/20">
               <CardContent className="p-8">
-                <div className="mb-4 inline-block rounded-lg bg-warning/10 p-3">
-                  <Database className="h-8 w-8 text-warning" />
+                <div className="mb-4 inline-block rounded-lg bg-destructive/10 p-3">
+                  <Database className="h-8 w-8 text-destructive" />
                 </div>
                 <h3 className="mb-3 text-2xl font-bold">Data Exploitation</h3>
                 <p className="text-muted-foreground">
@@ -149,7 +132,7 @@ const Landing = () => {
       </section>
 
       {/* Solution Overview */}
-      <section className="bg-secondary/30 py-16 md:py-24">
+      <section id="solution" className="bg-gray-50 py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">How M.E.R.I.D.I.A.N. Changes Everything</h2>
@@ -160,9 +143,11 @@ const Landing = () => {
           <div className="grid gap-6 md:grid-cols-4">
             {steps.map((step, index) => (
               <div key={index} className="relative">
-                <Card className="h-full">
+                <Card className="group h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
                   <CardContent className="p-6">
-                    <div className="mb-4 text-5xl font-black text-primary/20">{step.number}</div>
+                    <div className="mb-4 text-5xl font-black text-primary/20 group-hover:text-[#FD4102]">
+                      {step.number}
+                    </div>
                     <h3 className="mb-2 text-xl font-bold">{step.title}</h3>
                     <p className="text-sm text-muted-foreground">{step.description}</p>
                   </CardContent>
@@ -179,7 +164,7 @@ const Landing = () => {
       </section>
 
       {/* Key Features */}
-      <section className="py-16 md:py-24">
+      <section id="features" className="bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">Powerful Features</h2>
@@ -204,7 +189,7 @@ const Landing = () => {
       </section>
 
       {/* Statistics */}
-      <section className="bg-primary py-16 text-primary-foreground md:py-24">
+      <section id="stats" className="bg-primary py-16 text-primary-foreground md:py-24">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 md:grid-cols-4">
             {stats.map((stat, index) => (
@@ -218,7 +203,7 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24">
+      <section id="cta" className="bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
           <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
             <CardContent className="p-12 text-center">
