@@ -13,12 +13,33 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { useLoading } from "@/contexts/LoadingContext";
 import Loading from "@/components/ui/loading";
 
 const HeroFuturistic = lazy(() => import("@/components/ui/hero-futuristic"));
 
+// Wrapper component that signals when HeroFuturistic has loaded
+const HeroWithLoadingComplete = () => {
+  const { setIsInitialLoading } = useLoading();
+
+  useEffect(() => {
+    // This runs after the lazy component has loaded and mounted
+    setIsInitialLoading(false);
+  }, [setIsInitialLoading]);
+
+  return <HeroFuturistic />;
+};
+
 const Landing = () => {
+  const { setIsInitialLoading } = useLoading();
+
+  useEffect(() => {
+    // Reset loading state to true when navigating back to home
+    return () => {
+      setIsInitialLoading(true);
+    };
+  }, [setIsInitialLoading]);
   const features = [
     {
       icon: Shield,
@@ -86,7 +107,7 @@ const Landing = () => {
     <div className="animate-fade-in">
       {/* Hero Section */}
       <Suspense fallback={<Loading />}>
-        <HeroFuturistic />
+        <HeroWithLoadingComplete />
       </Suspense>
 
       {/* Problem Statement */}
