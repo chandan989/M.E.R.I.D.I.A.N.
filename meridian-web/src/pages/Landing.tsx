@@ -13,7 +13,10 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import HeroFuturistic from "@/components/ui/hero-futuristic";
+import { Suspense, lazy } from "react";
+import Loading from "@/components/ui/loading";
+
+const HeroFuturistic = lazy(() => import("@/components/ui/hero-futuristic"));
 
 const Landing = () => {
   const features = [
@@ -82,15 +85,17 @@ const Landing = () => {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <HeroFuturistic />
+      <Suspense fallback={<Loading />}>
+        <HeroFuturistic />
+      </Suspense>
 
       {/* Problem Statement */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We're Solving</h2>
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We\'re Solving</h2>
             <p className="text-lg text-muted-foreground">
-              Current AI systems are built on biased, exploited data. It's time for change.
+              Current AI systems are built on biased, exploited data. It\'s time for change.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-2">

@@ -187,6 +187,13 @@ All colors MUST be HSL.
   gap: 8px;
   opacity: 0;
   animation: fadeIn 1s ease-out forwards;
+  transition: all 0.3s ease;
+}
+
+.explore-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .explore-arrow {
@@ -195,11 +202,20 @@ All colors MUST be HSL.
 }
 
 .arrow-svg {
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .explore-btn:hover .arrow-svg {
-  transform: translateY(4px);
+  animation: spin 0.6s ease-in-out;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes bounce {
