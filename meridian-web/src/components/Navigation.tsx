@@ -33,10 +33,10 @@ const Navigation = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-orange-200 ${
+                className={`text-sm font-medium transition-colors hover:text-[#FD6602] ${
                   isActive(link.path)
-                    ? "text-white font-bold"
-                    : "text-orange-100"
+                    ? "text-[#FD6602] font-bold"
+                    : "text-white"
                 }`}
               >
                 {link.label}
