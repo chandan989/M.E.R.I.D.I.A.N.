@@ -3,87 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M.E.R.I.D.I.A.N. | The Future of Data</title>
+    <title>M.E.R.I.D.I.A.N. | The Dawn of Data Sovereignty</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="logo.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --primary-orange: #FD6602;
+            --light-bg: #FFFFFF;
+            --dark-bg: #F5F5F5; /* A very light grey for contrast */
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: 'Chakra Petch', sans-serif;
-            background-color: #F8F9FA; /* Lighter grey for a softer look */
-            color: #1a1a1a;
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
         }
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
+
+        .accent-orange {
+            color: var(--primary-orange);
         }
-        .electric-violet {
-            color: #5C27FE;
+        .bg-accent-orange {
+            background-color: var(--primary-orange);
         }
-        .bg-electric-violet {
-            background-color: #5C27FE;
-        }
+
         .btn {
             transition: all 0.3s ease;
-            border-radius: 0.375rem; /* Boxy buttons */
-            font-weight: 600;
+            border-radius: 0.375rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .btn-primary {
-            background: linear-gradient(45deg, #5C27FE, #7A4FFC);
-            color: white;
-            padding: 12px 28px;
-            box-shadow: 0 10px 20px -5px rgba(92, 39, 254, 0.3);
+            background: var(--primary-orange);
+            color: var(--light-bg);
+            padding: 14px 32px;
+            box-shadow: 0 4px 15px rgba(253, 102, 2, 0.2);
+            border: 1px solid var(--primary-orange);
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px -5px rgba(92, 39, 254, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(253, 102, 2, 0.3);
         }
         .btn-secondary {
-            background-color: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(5px);
-            border: 1px solid #E5E7EB;
-            color: #374151;
-            padding: 12px 28px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 14px 32px;
         }
         .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.8);
-            border-color: #D1D5DB;
+            background-color: var(--dark-bg);
+            border-color: var(--text-primary);
+            transform: translateY(-3px);
         }
+
         .glass-nav {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(230, 230, 230, 0.7);
+            border-bottom: 1px solid var(--border-color);
         }
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+        .card {
+            background: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
         }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            border-color: rgba(253, 102, 2, 0.3);
+        }
+
         .scroll-target {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
         }
         .scroll-target.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .hero-content > * {
-            opacity: 0;
-        }
+
         #bg-canvas {
             position: absolute;
             top: 0;
@@ -91,21 +98,31 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            opacity: 0.7;
+            opacity: 0.8;
         }
         .hero-content {
             position: relative;
             z-index: 2;
         }
-        .bg-gradient-blur {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(92, 39, 254, 0.15) 0%, rgba(92, 39, 254, 0) 70%);
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
+
+        .section-title {
+            font-weight: 900;
+            letter-spacing: -1px;
         }
+
+        .hzd-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-orange), transparent);
+            margin: 1.5rem auto;
+            width: 100px;
+        }
+
+        /* For GSAP animation */
+        .hero-content .line {
+            display: block;
+            overflow: hidden;
+        }
+
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -113,21 +130,21 @@
     <!-- Header -->
     <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold tracking-tighter electric-violet font-orbitron"><img src="logo.svg" class="h-8 md:h-10"/></a>
-            <nav class="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
-                <a href="#features" class="hover:text-black transition-colors">Features</a>
-                <a href="#how-it-works" class="hover:text-black transition-colors">Process</a>
-                <a href="#solution" class="hover:text-black transition-colors">Solution</a>
+            <a href="#" class="text-2xl font-bold tracking-tighter"><img src="https://raw.githubusercontent.com/chandan989/M.E.R.I.D.I.A.N./68d16454b60fa6bb2f309b47063394e37189f33c/logo.svg" class="h-8 md:h-10"/></a>
+            <nav class="hidden md:flex items-center space-x-8 text-text-primary font-medium">
+                <a href="#problem" class="hover:text-black transition-colors">The Flaw</a>
+                <a href="#solution" class="hover:text-black transition-colors">The Protocol</a>
+                <a href="#features" class="hover:text-black transition-colors">The Arsenal</a>
             </nav>
             <a href="#" class="btn btn-primary hidden md:block">Launch App</a>
-            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-700 focus:outline-none">
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-text-primary focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
             </button>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-             <a href="#features" class="block py-2 text-gray-700 font-medium">Features</a>
-             <a href="#how-it-works" class="block py-2 text-gray-700 font-medium">Process</a>
-             <a href="#solution" class="block py-2 text-gray-700 font-medium">Solution</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/80 backdrop-blur-md px-6 pb-4">
+             <a href="#problem" class="block py-2 text-text-primary font-medium">The Flaw</a>
+             <a href="#solution" class="block py-2 text-text-primary font-medium">The Protocol</a>
+             <a href="#features" class="block py-2 text-text-primary font-medium">The Arsenal</a>
              <a href="#" class="block mt-4 btn btn-primary text-center">Launch App</a>
         </div>
     </header>
@@ -137,86 +154,72 @@
         <section class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
             <canvas id="bg-canvas"></canvas>
             <div class="hero-content container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-gray-900 mb-6 leading-tight scroll-target font-orbitron">
-                    Own Your Data.
-                    <br class="hidden md:block" />
-                    <span class="electric-violet">Fuel the Future of AI.</span>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-text-primary mb-6 leading-tight section-title">
+                    <span class="line">The Dawn of Data Sovereignty.</span>
                 </h1>
-                <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-600 mb-10 scroll-target" style="transition-delay: 150ms;">
-                    M.E.R.I.D.I.A.N. is the decentralized marketplace where your data finds its true value. Take control, eliminate bias, and earn from your digital identity.
+                <p class="max-w-2xl mx-auto text-lg md:text-xl text-text-secondary mb-10">
+                    M.E.R.I.D.I.A.N. is the decentralized protocol where your data becomes your power. Seize control, dismantle bias, and earn from your true digital self.
                 </p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 scroll-target" style="transition-delay: 300ms;">
-                    <a href="#" class="btn btn-primary w-full sm:w-auto">Become a Data Provider</a>
-                    <a href="#" class="btn btn-secondary w-full sm:w-auto">Explore the Marketplace</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Trusted By Section -->
-        <section class="py-12">
-            <div class="container mx-auto px-6 text-center">
-                <p class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-6">Powered By Leading Web3 Technology</p>
-                <div class="flex justify-center items-center gap-10 md:gap-16 grayscale opacity-60">
-                    <img src="https://via.placeholder.com/120x40/ccc/fff?text=Web5" alt="Web5 Logo" class="h-8 md:h-10"/>
-                    <img src="https://via.placeholder.com/120x40/ccc/fff?text=Creditcoin" alt="Creditcoin Logo" class="h-8 md:h-10"/>
-                    <img src="https://via.placeholder.com/120x40/ccc/fff?text=React" alt="React Logo" class="h-8 md:h-10"/>
-                    <img src="https://via.placeholder.com/120x40/ccc/fff?text=FastAPI" alt="FastAPI Logo" class="h-8 md:h-10"/>
+                <div class="cta-buttons flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#" class="btn btn-primary w-full sm:w-auto">Claim Your Data</a>
+                    <a href="#solution" class="btn btn-secondary w-full sm:w-auto">Explore The Protocol</a>
                 </div>
             </div>
         </section>
 
         <!-- The Problem Section -->
         <section id="problem" class="py-20 md:py-32 relative overflow-hidden">
-             <div class="bg-gradient-blur top-0 left-0"></div>
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16 scroll-target">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">The Data Dilemma</h2>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">The current data economy is a one-way street. Your information is taken, and its value flows away from you.</p>
+                    <h2 class="text-3xl md:text-5xl section-title">The Flaw in the Code</h2>
+                    <div class="hzd-line"></div>
+                    <p class="mt-4 text-lg text-text-secondary max-w-3xl mx-auto">The old world built machines that consumed our stories but never gave back. Your data fuels a system that leaves you behind.</p>
                 </div>
                 <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                    <div class="glass-card p-8 rounded-lg scroll-target">
+                    <div class="card p-8 scroll-target">
                         <div class="flex items-center mb-4">
-                           <div class="p-3 rounded-full  mr-4"><svg class="w-6 h-6 text-[#5C27FE]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
-                           <h3 class="text-2xl font-bold">Biased AI, Skewed Reality</h3>
+                           <div class="p-3 rounded-full mr-4"><svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                           <h3 class="text-2xl font-bold">Corrupted Machines</h3>
                         </div>
-                        <p class="text-gray-600 text-lg">AI models learn from available data. When that data comes from a single demographic, the AI becomes a mirror of existing inequalities, failing communities and businesses alike.</p>
+                        <p class="text-text-secondary text-lg">AI learns from a skewed past. Fed on limited data, it creates a future reflecting old inequalities, failing entire communities and blinding businesses to true potential.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-lg scroll-target" style="transition-delay: 150ms;">
+                    <div class="card p-8 scroll-target" style="transition-delay: 150ms;">
                          <div class="flex items-center mb-4">
-                             <div class="p-3 rounded-full mr-4"><svg class="w-6 h-6 text-[#5C27FE]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg></div>
-                             <h3 class="text-2xl font-bold">Exploited Identity</h3>
+                             <div class="p-3 rounded-full mr-4"><svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div>
+                             <h3 class="text-2xl font-bold">The Unseen Harvest</h3>
                         </div>
-                        <p class="text-gray-600 text-lg">You are the product. Centralized platforms treat your personal data as a resource to be mined and sold, stripping you of privacy, control, and any economic benefit.</p>
+                        <p class="text-text-secondary text-lg">You are the resource. Centralized behemoths mine your identity, selling your echo to the highest bidder, leaving you without privacy, control, or compensation.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- The Solution Section -->
-        <section id="solution" class="py-20 md:py-32">
+        <section id="solution" class="py-20 md:py-32 bg-dark-bg">
             <div class="container mx-auto px-6 text-center">
                  <div class="scroll-target">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">The <span class="electric-violet">M.E.R.I.D.I.A.N.</span> Protocol</h2>
-                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">We don't just fix the model, we give you the keys. True data sovereignty is here.</p>
+                    <h2 class="text-3xl md:text-5xl section-title">The <span class="accent-orange">M.E.R.I.D.I.A.N.</span> Protocol</h2>
+                    <div class="hzd-line"></div>
+                    <p class="mt-4 text-lg text-text-secondary max-w-3xl mx-auto">We don't just patch the code, we rewrite the core. This is true data sovereignty.</p>
                 </div>
-                <div class="mt-16 max-w-5xl mx-auto p-8 bg-white/50 rounded-lg border border-gray-200 scroll-target">
+                <div class="mt-16 max-w-5xl mx-auto p-8 card scroll-target">
                     <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div class="text-left p-6 bg-gray-100 rounded-lg">
-                            <h4 class="text-xl font-bold text-gray-800 mb-2">Before: The Old Web</h4>
-                            <ul class="space-y-2 text-gray-700">
-                                <li class="flex items-start"><span class="text-gray-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>You surrender data to platforms.</li>
-                                <li class="flex items-start"><span class="text-gray-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>Your data is sold without your consent.</li>
-                                <li class="flex items-start"><span class="text-gray-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>Platforms capture 100% of the value.</li>
-                                <li class="flex items-start"><span class="text-gray-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.75827 17.2426L12.0009 12M17.2435 6.75736L12.0009 12M12.0009 12L6.75827 6.75736M12.0009 12L17.2435 17.2426" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>Your data lives on their servers, forever.</li>
+                        <div class="text-left p-6 bg-gray-200 rounded-lg">
+                            <h4 class="text-xl font-bold text-gray-600 mb-2">The Old World</h4>
+                            <ul class="space-y-2 text-gray-500">
+                                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#10006;</span>You relinquish your data.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#10006;</span>Your echo is sold in shadows.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#10006;</span>Titans capture 100% of the value.</li>
+                                <li class="flex items-start"><span class="text-red-500 mr-3 mt-1">&#10006;</span>Your data is caged in their servers.</li>
                             </ul>
                         </div>
-                        <div class="text-left p-6 bg-violet-100 rounded-lg">
-                            <h4 class="text-xl font-bold text-violet-700 mb-2">After: M.E.R.I.D.I.A.N.</h4>
-                            <ul class="space-y-2 text-gray-700">
-                                <li class="flex items-start"><span class="text-violet-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M5 13L9 17L19 7" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>You own your data in a personal node.</li>
-                                <li class="flex items-start"><span class="text-violet-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M5 13L9 17L19 7" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>You license access via a secure NFT.</li>
-                                <li class="flex items-start"><span class="text-violet-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M5 13L9 17L19 7" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>You earn directly from every sale.</li>
-                                <li class="flex items-start"><span class="text-violet-500 mr-3 mt-1"><?xml version="1.0" encoding="UTF-8"?><svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M5 13L9 17L19 7" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>Your data never leaves your control.</li>
+                        <div class="text-left p-6 bg-orange-50 rounded-lg">
+                            <h4 class="text-xl font-bold text-orange-800 mb-2">The New Dawn</h4>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start"><span class="text-orange-500 mr-3 mt-1">&#10004;</span>You own your data in a personal node.</li>
+                                <li class="flex items-start"><span class="text-orange-500 mr-3 mt-1">&#10004;</span>You license access via a secure NFT.</li>
+                                <li class="flex items-start"><span class="text-orange-500 mr-3 mt-1">&#10004;</span>You earn directly from every transaction.</li>
+                                <li class="flex items-start"><span class="text-orange-500 mr-3 mt-1">&#10004;</span>Your data never leaves your control.</li>
                             </ul>
                         </div>
                     </div>
@@ -225,82 +228,83 @@
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="py-20 md:py-32 bg-white relative overflow-hidden">
-             <div class="bg-gradient-blur bottom-0 right-0"></div>
+        <section id="features" class="py-20 md:py-32">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16 scroll-target">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">The Technology of Tomorrow, Today</h2>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">A powerful fusion of Web5 identity, Web3 economics, and privacy-first AI.</p>
+                    <h2 class="text-3xl md:text-5xl section-title">The Arsenal of the Sovereign</h2>
+                    <div class="hzd-line"></div>
+                    <p class="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">A fusion of Web5 identity, Web3 economics, and privacy-first AI built for a new era.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Feature Items -->
-                    <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target">
-                        <h3 class="text-xl font-bold mb-2">Self-Sovereign Identity</h3>
-                        <p class="text-gray-600">Web5-powered DIDs give you a portable, secure identity that you own. No more passwords, no more platforms.</p>
+                    <div class="card p-6 scroll-target">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Self-Sovereign Identity</h3>
+                        <p class="text-text-secondary">Web5-powered DIDs grant you a portable, unbreakable identity you control. No masters, no platforms.</p>
                     </div>
-                     <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target" style="transition-delay: 100ms;">
-                        <h3 class="text-xl font-bold mb-2">Data-as-NFT</h3>
-                        <p class="text-gray-600">Your data access license is an NFT on Creditcoin. It's a verifiable, tradable asset that puts you in the driver's seat.</p>
+                     <div class="card p-6 scroll-target" style="transition-delay: 100ms;">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Data-as-Artifact</h3>
+                        <p class="text-text-secondary">Your data access license is a unique NFT on Creditcoin. A verifiable, tradable asset that puts you in command.</p>
                     </div>
-                     <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target" style="transition-delay: 200ms;">
-                        <h3 class="text-xl font-bold mb-2">Privacy-First AI</h3>
-                        <p class="text-gray-600">Our AI analyzes data with temporary read-only access. Your data never moves from your personal storage node.</p>
+                     <div class="card p-6 scroll-target" style="transition-delay: 200ms;">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Ghost-Mode AI</h3>
+                        <p class="text-text-secondary">Our AI analyzes data with temporary, read-only access. Your information never leaves your personal data-cauldron.</p>
                     </div>
-                     <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target" style="transition-delay: 300ms;">
-                        <h3 class="text-xl font-bold mb-2">Fractional Ownership</h3>
-                        <p class="text-gray-600">Buyers can purchase fractions of Data NFTs, making valuable datasets affordable and democratizing access for all.</p>
+                     <div class="card p-6 scroll-target" style="transition-delay: 300ms;">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Shard Ownership</h3>
+                        <p class="text-text-secondary">Buyers can acquire shards of Data NFTs, making powerful datasets accessible and democratizing knowledge for all tribes.</p>
                     </div>
-                     <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target" style="transition-delay: 400ms;">
-                        <h3 class="text-xl font-bold mb-2">Direct Monetization</h3>
-                        <p class="text-gray-600">Earn directly from your data without intermediaries. Payments are sent peer-to-peer via smart contracts.</p>
+                     <div class="card p-6 scroll-target" style="transition-delay: 400ms;">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Direct Tribute</h3>
+                        <p class="text-text-secondary">Earn directly from your data without scribes or intermediaries. Payments flow peer-to-peer via smart contracts.</p>
                     </div>
-                     <div class="bg-gray-50/50 p-6 rounded-lg border border-gray-100 scroll-target" style="transition-delay: 500ms;">
-                        <h3 class="text-xl font-bold mb-2">Bias Elimination</h3>
-                        <p class="text-gray-600">By sourcing data from diverse communities, we help create fairer, more effective, and globally representative AI models.</p>
+                     <div class="card p-6 scroll-target" style="transition-delay: 500ms;">
+                        <h3 class="text-xl font-bold mb-2 accent-orange">Bias Extinction</h3>
+                        <p class="text-text-secondary">By sourcing data from diverse communities, we create fairer, more effective, and globally representative AI machines.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- How It Works Section -->
-        <section id="how-it-works" class="py-20 md:py-32">
+        <section id="how-it-works" class="py-20 md:py-32 bg-dark-bg">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16 scroll-target">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight">Your Path to Data Monetization</h2>
-                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">A seamless, secure, and transparent process from start to finish.</p>
+                    <h2 class="text-3xl md:text-5xl section-title">The Path of the Provider</h2>
+                    <div class="hzd-line"></div>
+                    <p class="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">A seamless, secure, and transparent ritual from data storage to monetization.</p>
                 </div>
                 <div class="max-w-2xl mx-auto">
                     <div class="relative">
                         <!-- The vertical line -->
-                        <div class="absolute left-8 top-8 h-full border-l-2 border-dashed border-gray-300"></div>
+                        <div class="absolute left-8 top-8 h-full border-l-2 border-dashed border-gray-200"></div>
                         <!-- Step Items -->
                         <div class="mb-12 scroll-target">
                             <div class="flex items-center mb-4">
-                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-2xl bg-electric-violet text-white font-bold text-2xl shadow-lg">1</div>
+                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-full bg-accent-orange text-white font-black text-2xl shadow-lg">1</div>
                                 <h3 class="ml-6 text-2xl font-bold">Connect & Store</h3>
                             </div>
-                            <p class="ml-22 text-lg text-gray-600">Link your Web5 identity in seconds. Upload your valuable datasets to your personal, fully encrypted Decentralized Web Node (DWN).</p>
+                            <p class="ml-22 text-lg text-text-secondary">Link your Web5 identity. Upload your valuable datasets to your personal, encrypted Decentralized Web Node (DWN).</p>
                         </div>
                          <div class="mb-12 scroll-target" style="transition-delay:150ms;">
                             <div class="flex items-center mb-4">
-                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-2xl bg-electric-violet text-white font-bold text-2xl shadow-lg">2</div>
-                                <h3 class="ml-6 text-2xl font-bold">Analyze & Mint</h3>
+                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-full bg-accent-orange text-white font-black text-2xl shadow-lg">2</div>
+                                <h3 class="ml-6 text-2xl font-bold">Analyze & Forge</h3>
                             </div>
-                            <p class="ml-22 text-lg text-gray-600">Grant temporary, read-only access for our AI to assess quality and suggest a fair market price. With your approval, we mint a Data NFT on Creditcoin.</p>
+                            <p class="ml-22 text-lg text-text-secondary">Grant temporary, read-only access for our AI to assess value. With your approval, we forge a Data NFT on Creditcoin.</p>
                         </div>
                          <div class="mb-12 scroll-target" style="transition-delay:300ms;">
                             <div class="flex items-center mb-4">
-                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-2xl bg-electric-violet text-white font-bold text-2xl shadow-lg">3</div>
+                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-full bg-accent-orange text-white font-black text-2xl shadow-lg">3</div>
                                 <h3 class="ml-6 text-2xl font-bold">List & Sell</h3>
                             </div>
-                            <p class="ml-22 text-lg text-gray-600">Your Data NFT, representing access rights, is listed on the marketplace. AI researchers, developers, and businesses can now discover and purchase it.</p>
+                            <p class="ml-22 text-lg text-text-secondary">Your Data NFT, a token of access rights, is listed. AI builders and researchers can now discover and purchase it.</p>
                         </div>
                          <div class="scroll-target" style="transition-delay:450ms;">
                             <div class="flex items-center mb-4">
-                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-2xl bg-electric-violet text-white font-bold text-2xl shadow-lg">4</div>
-                                <h3 class="ml-6 text-2xl font-bold">Earn Directly</h3>
+                                <div class="z-10 flex items-center justify-center w-16 h-16 rounded-full bg-accent-orange text-white font-black text-2xl shadow-lg">4</div>
+                                <h3 class="ml-6 text-2xl font-bold">Earn & Repeat</h3>
                             </div>
-                            <p class="ml-22 text-lg text-gray-600">When a buyer purchases your NFT, the payment is sent directly to your wallet via a secure smart contract. No intermediaries, no hidden fees.</p>
+                            <p class="ml-22 text-lg text-text-secondary">When a buyer acquires your NFT, payment is sent directly to your wallet. No intermediaries, no hidden fees.</p>
                         </div>
                     </div>
                 </div>
@@ -310,13 +314,11 @@
         <!-- CTA Section -->
         <section class="py-20 md:py-32">
             <div class="container mx-auto px-6">
-                 <div class="relative rounded-lg p-10 md:p-20 text-center overflow-hidden scroll-target">
-                     <div class="absolute inset-0 bg-electric-violet" style="background: linear-gradient(45deg, #5C27FE, #4F21DF);"></div>
-                     <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIj48cmVjdCB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiNmZmYiPjwvcmVjdD48cmVjdCB4PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZTZlNmU2Ij48L3JlY3Q+PHJlY3QgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2U2ZTZlNiI+PC9yZWN0Pjwvc3ZnPg==');"></div>
+                 <div class="relative rounded-lg p-10 md:p-20 text-center overflow-hidden scroll-target card bg-dark-bg">
                      <div class="relative z-10">
-                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">Join The Data Revolution.</h2>
-                        <p class="max-w-xl mx-auto text-lg text-violet-200 mb-8">It's time to own your digital life. Become a provider on M.E.R.I.D.I.A.N. and start earning from your data today.</p>
-                        <a href="#" class="btn bg-white electric-violet px-8 py-4 text-lg font-bold transform hover:scale-105">Get Started for Free</a>
+                        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-text-primary mb-4 section-title">Join the Uprising.</h2>
+                        <p class="max-w-xl mx-auto text-lg text-orange-600 mb-8">It's time to own your digital life. Become a provider on M.E.R.I.D.I.A.N. and start earning from your data today.</p>
+                        <a href="#" class="btn btn-primary px-8 py-4 text-lg">Claim Your Data</a>
                     </div>
                 </div>
             </div>
@@ -324,27 +326,27 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200">
+    <footer class="border-t border-gray-200">
         <div class="container mx-auto px-6 py-8">
             <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                 <p class="text-lg font-bold tracking-tighter electric-violet font-orbitron">M.E.R.I.D.I.A.N.</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 M.E.R.I.D.I.A.N. All Rights Reserved.</p>
-                <div class="flex space-x-6 text-gray-500">
-                    <a href="https://github.com/chandan989/M.E.R.I.D.I.A.N." class="hover:text-gray-900"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12.014c0 4.438 2.865 8.225 6.839 9.541.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.014C22 6.477 17.523 2 12 2z" clip-rule="evenodd"></path></svg></a>
+                 <p class="text-lg font-bold tracking-tighter accent-orange">M.E.R.I.D.I.A.N.</p>
+                <p class="text-text-secondary text-sm">&copy; 2025 M.E.R.I.D.I.A.N. All Rights Reserved.</p>
+                <div class="flex space-x-6 text-text-secondary">
+                    <a href="https://github.com/chandan989/M.E.R.I.D.I.A.N." class="hover:text-orange-500"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12.014c0 4.438 2.865 8.225 6.839 9.541.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.014C22 6.477 17.523 2 12 2z" clip-rule="evenodd"></path></svg></a>
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 
-        // Mobile Menu Toggle
+        // --- Mobile Menu & Header Scroll ---
         document.getElementById('mobile-menu-button').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
 
-        // Header scroll effect
         const header = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -354,62 +356,97 @@
             }
         });
 
-        // Scroll Animations
+        // --- Intersection Observer for Scroll Animations ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.2 });
         document.querySelectorAll('.scroll-target').forEach(el => observer.observe(el));
 
+        // --- GSAP Hero Animation ---
+        const tl = gsap.timeline();
+        tl.from(".hero-content .line", {
+            y: 100,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+        })
+        .from(".hero-content p", {
+            y: 20,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+        }, "-=0.8")
+        .from(".hero-content .cta-buttons", {
+            y: 20,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out"
+        }, "-=0.8");
 
-        let scene, camera, renderer, crystal;
-
+        // --- Three.js Interactive Background ---
+        let scene, camera, renderer, sphere, uniforms;
         const mouse = new THREE.Vector2();
-        const accentColor = 0x5C27FE;
-        const bgColor = 0x0D0C14;
 
         function init() {
             scene = new THREE.Scene();
-
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 15;
+            camera.position.z = 2.5;
 
             const canvas = document.getElementById('bg-canvas');
-            renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                antialias: true,
-                alpha: true
-            });
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setClearColor(bgColor, 0); // Transparent background
 
-            // Create the central crystal object
-            const crystalGeo = new THREE.IcosahedronGeometry(5, 0);
-            const crystalMat = new THREE.MeshStandardMaterial({
-                color: accentColor,
-                transparent: true,
-                opacity: 0.9,
+            const geometry = new THREE.SphereGeometry(1, 128, 128);
+
+            uniforms = {
+                time: { value: 1.0 },
+                colorA: { value: new THREE.Color(0xffffff) },
+                colorB: { value: new THREE.Color(0xfd6602) }
+            };
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: `
+                    uniform float time;
+                    varying vec2 vUv;
+                    varying float noise;
+
+                    void main() {
+                        vUv = uv;
+                        vec3 pos = position;
+                        noise = 0.2 * sin(pos.y * 5.0 + time * 2.0) + 0.3 * sin(pos.x * 10.0 + time * 1.5);
+                        pos += normal * noise * 0.1;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 colorA;
+                    uniform vec3 colorB;
+                    varying vec2 vUv;
+                    varying float noise;
+
+                    void main() {
+                        vec3 color = mix(colorA, colorB, vUv.y * 1.5 + noise * 1.2);
+                        gl_FragColor = vec4(color, 0.2 + abs(noise * 2.0));
+                    }
+                `,
                 wireframe: true,
+                transparent: true
             });
-            crystal = new THREE.Mesh(crystalGeo, crystalMat);
-            scene.add(crystal);
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(5, 10, 7.5);
-            scene.add(directionalLight);
+            sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
 
             document.addEventListener('mousemove', onDocumentMouseMove);
             window.addEventListener('resize', onWindowResize);
         }
 
         function onDocumentMouseMove(event) {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = (event.clientX / window.innerWidth) - 0.5;
+            mouse.y = (event.clientY / window.innerHeight) - 0.5;
         }
 
         function onWindowResize() {
@@ -423,30 +460,19 @@
             const elapsedTime = clock.getElapsedTime();
             requestAnimationFrame(animate);
 
-            // Animate crystal
-            crystal.rotation.y = .1 * elapsedTime;
-            crystal.rotation.x = .1 * elapsedTime;
+            uniforms.time.value = elapsedTime;
 
-            // Parallax mouse effect
-            camera.position.x += (mouse.x * 2 - camera.position.x) * .03;
-            camera.position.y += (mouse.y * 2 - camera.position.y) * .03;
-            camera.lookAt(scene.position);
+            sphere.rotation.y = elapsedTime * 0.1;
+            sphere.rotation.x += mouse.y * 0.005;
+            sphere.rotation.y += mouse.x * 0.005;
 
             renderer.render(scene, camera);
         }
 
         init();
         animate();
-
-        // Opening animation trigger
-        window.addEventListener('load', () => {
-            document.getElementById('bg-canvas').style.opacity = 0.5;
-            const heroElements = document.querySelectorAll('.hero-content > *');
-            heroElements.forEach((el, index) => {
-                el.style.animation = `fadeInUp 1s ease-out ${0.5 + index * 0.4}s forwards`;
-            });
-        });
     </script>
 
 </body>
 </html>
+
