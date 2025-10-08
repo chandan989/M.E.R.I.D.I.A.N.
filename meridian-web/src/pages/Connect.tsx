@@ -148,7 +148,7 @@ const Connect = () => {
                     </>
                   ) : walletId ? (
                     <>
-                      <span className="truncate">{walletId}</span>
+                      <span>Proceed to Create DID</span>
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   ) : (
@@ -288,7 +288,7 @@ const Connect = () => {
                   <p className="text-sm">
                     <strong>Your DID:</strong>
                     <br />
-                    <code className="text-xs">did:web5:eyJraWQi...a8Vk9fQ</code>
+                    <code className="text-xs">{walletId}</code>
                   </p>
                 </div>
 

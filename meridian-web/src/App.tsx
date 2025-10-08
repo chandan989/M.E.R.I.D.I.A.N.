@@ -17,6 +17,7 @@ import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
 import { ReactNode } from "react";
 import { DidProvider } from "./contexts/DidContext";
+import { LoadingProvider } from "./contexts/LoadingContext";
 
 const queryClient = new QueryClient();
 
@@ -34,28 +35,30 @@ const LayoutWrapper = ({ children }: { children: ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <DidProvider>
-          <LayoutWrapper>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/marketplace" element={<Marketplace />} />
-              <Route path="/marketplace/:id" element={<DatasetDetails />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/connect" element={<Connect />} />
-              <Route path="/upload" element={<Upload />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/docs" element={<Docs />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/support" element={<Support />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL \"*\" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </LayoutWrapper>
-        </DidProvider>
-      </BrowserRouter>
+      <LoadingProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <DidProvider>
+            <LayoutWrapper>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/marketplace/:id" element={<DatasetDetails />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/connect" element={<Connect />} />
+                <Route path="/upload" element={<Upload />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/docs" element={<Docs />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/support" element={<Support />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL \"*\" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </LayoutWrapper>
+          </DidProvider>
+        </BrowserRouter>
+      </LoadingProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

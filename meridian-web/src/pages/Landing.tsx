@@ -13,13 +13,34 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { useLoading } from "@/contexts/LoadingContext";
 import Loading from "@/components/ui/loading";
 import LandingPageNavigation from "@/components/LandingPageNavigation";
 
 const HeroFuturistic = lazy(() => import("@/components/ui/hero-futuristic"));
 
+// Wrapper component that signals when HeroFuturistic has loaded
+const HeroWithLoadingComplete = () => {
+  const { setIsInitialLoading } = useLoading();
+
+  useEffect(() => {
+    // This runs after the lazy component has loaded and mounted
+    setIsInitialLoading(false);
+  }, [setIsInitialLoading]);
+
+  return <HeroFuturistic />;
+};
+
 const Landing = () => {
+  const { isInitialLoading, setIsInitialLoading } = useLoading();
+
+  useEffect(() => {
+    // Reset loading state to true when navigating back to home
+    return () => {
+      setIsInitialLoading(true);
+    };
+  }, [setIsInitialLoading]);
   const features = [
     {
       icon: Shield,
@@ -85,16 +106,19 @@ const Landing = () => {
 
   return (
     <div className="animate-fade-in">
-      <LandingPageNavigation />
+      {!isInitialLoading && <LandingPageNavigation />}
       {/* Hero Section */}
       <section id="home">
         <Suspense fallback={<Loading />}>
-          <HeroFuturistic />
+          <HeroWithLoadingComplete />
         </Suspense>
       </section>
 
-      {/* Problem Statement */}
-      <section id="problem" className="bg-background py-16 md:py-24">
+      {/* Only show sections after loading completes */}
+      {!isInitialLoading && (
+        <>
+          {/* Problem Statement */}
+          <section id="problem" className="bg-background py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We're Solving</h2>
@@ -231,6 +255,8 @@ const Landing = () => {
           </Card>
         </div>
       </section>
+        </>
+      )}
     </div>
   );
 };
