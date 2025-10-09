@@ -75,10 +75,10 @@ const Landing = () => {
   ];
 
   const stats = [
-    { value: "$100B+", label: "Data Market Opportunity" },
-    { value: "10K+", label: "Datasets Listed" },
-    { value: "50K+", label: "Data Providers" },
-    { value: "98%", label: "User Satisfaction" },
+    { value: "$57.7B", label: "TAM (Total Addressable Market)" },
+    { value: "$13.6B", label: "SAM (Serviceable Addressable Market)" },
+    { value: "$4.3M", label: "SOM (Serviceable Obtainable Market)" },
+    { value: "MVP", label: "Current Stage" },
   ];
 
   const steps = [
@@ -297,7 +297,7 @@ const Landing = () => {
                       </Link>
                     </div>
                     <p className="mt-6 text-sm text-muted-foreground">
-                      Join <span className="font-semibold text-[#FD4102]">50,000+</span> data providers and buyers.
+                      Be one of the first data providers and buyers.
                     </p>
                   </CardContent>
                 </Card>
