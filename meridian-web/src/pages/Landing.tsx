@@ -104,6 +104,17 @@ const Landing = () => {
     },
   ];
 
+  // Show loading screen while initial load is in progress
+  if (isInitialLoading) {
+    return (
+      <div className="relative">
+        <Suspense fallback={<Loading />}>
+          <HeroWithLoadingComplete />
+        </Suspense>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white text-gray-800 animate-fade-in relative">
       {/* Decorative Background Elements */}
@@ -113,17 +124,14 @@ const Landing = () => {
         <div className="absolute -bottom-40 right-1/4 w-64 h-64 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
       </div>
 
-      {!isInitialLoading && <LandingPageNavigation />}
+      <LandingPageNavigation />
       {/* Hero Section */}
       <section id="home" className="relative z-10">
-        <Suspense fallback={<Loading />}>
-          <HeroWithLoadingComplete />
-        </Suspense>
+        <HeroFuturistic />
       </section>
 
-      {/* Only show sections after loading completes */}
-      {!isInitialLoading && (
-        <div className="relative z-10">
+      {/* Sections after loading completes */}
+      <div className="relative z-10">
           {/* Problem Statement */}
           <section id="problem" className="py-16 md:py-24">
             <div className="container mx-auto px-4">
@@ -297,7 +305,6 @@ const Landing = () => {
             </div>
           </section>
         </div>
-      )}
     </div>
   );
 };
