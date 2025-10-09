@@ -27,6 +27,7 @@ import { OneProvider } from "./contexts/OneContext";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CustomCursor from "./components/ui/CustomCursor";
+import "./styles/scroller.css";
 
 const queryClient = new QueryClient();
 
