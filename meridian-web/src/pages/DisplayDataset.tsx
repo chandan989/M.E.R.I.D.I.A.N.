@@ -1,8 +1,7 @@
-
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Download, FileText } from "lucide-react";
+import { ArrowLeft, Download, FileText, Loader2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -11,9 +10,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useOne } from "@/contexts/OneContext";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const DisplayDataset = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { did, userType, isLoading } = useOne();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!did) {
+        toast.error("You must be logged in to view this page.");
+        navigate("/connect");
+      } else if (userType === 'provider') {
+        navigate("/provider-dashboard");
+        toast.error("This page is for data buyers to view their acquired datasets.");
+      }
+    }
+  }, [did, userType, isLoading, navigate]);
 
   // Mock data for a single dataset
   const dataset = {
@@ -32,6 +48,15 @@ const DisplayDataset = () => {
       { date: "2023-01-01", location: "Tokyo", temperature: "10°C", precipitation: "1 mm" },
     ],
   };
+
+  if (isLoading || !did || userType !== 'buyer') {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4">Verifying authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">

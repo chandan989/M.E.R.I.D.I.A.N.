@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
   Database,
@@ -10,38 +9,55 @@ import {
   Repeat,
   Activity,
   ArrowUpRight,
+  Loader2,
+  Star,
 } from "lucide-react";
 import { Chart } from "@/components/charts";
+import { useOne } from "@/contexts/OneContext";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const BuyerDashboard = () => {
+  const navigate = useNavigate();
+  const { did, userType, isLoading } = useOne();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!did) {
+        toast.error("You must be logged in to view this page.");
+        navigate("/connect");
+      } else if (userType === 'provider') {
+        navigate("/provider-dashboard");
+        toast.error("You are a data provider. Redirecting to your dashboard.");
+      }
+    }
+  }, [did, userType, isLoading, navigate]);
+
+  // Data from original component
   const stats = [
     {
       title: "Datasets Purchased",
       value: "12",
       change: "+2 this month",
       icon: ShoppingCart,
-      trend: "up",
     },
     {
       title: "Active Subscriptions",
       value: "5",
       change: "+1 this month",
       icon: Repeat,
-      trend: "up",
     },
     {
       title: "Data Accessed (GB)",
       value: "15.2",
       change: "+3.1 GB",
       icon: Download,
-      trend: "up",
     },
     {
       title: "Total Spent",
       value: "$1,850",
       change: "+$250",
       icon: DollarSign,
-      trend: "up",
     },
   ];
 
@@ -99,33 +115,75 @@ const BuyerDashboard = () => {
     { month: "Jun", desktop: 4.5 },
   ];
 
+  const ActivityIcon = ({ type }: { type: string }) => {
+    const className = "h-4 w-4 text-muted-foreground";
+    switch (type) {
+      case "purchase":
+        return <ShoppingCart className={className} />;
+      case "access":
+        return <Download className={className} />;
+      case "subscription":
+        return <Repeat className={className} />;
+      case "recommendation":
+        return <Star className={className} />;
+      default:
+        return <Activity className={className} />;
+    }
+  };
+
+  if (isLoading || !did || userType !== 'buyer') {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4">Verifying authentication...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-white text-gray-800 animate-fade-in relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-[#FD4102]/3 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 right-1/4 w-64 h-64 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-12 relative z-10">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="mb-2 text-4xl font-bold">Welcome back, DataBuyer!</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-12 text-center">
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+            <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">
+              Buyer Dashboard
+            </span>
+          </div>
+          <h1 className="mb-2 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+            Welcome Back, DataBuyer!
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Here's an overview of your data purchasing activity.
           </p>
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8 flex flex-wrap gap-3">
+        <div className="mb-12 flex flex-wrap items-center justify-center gap-4">
           <Link to="/marketplace">
-            <Button size="lg">
+            <Button
+              size="lg"
+              className="h-12 text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30 hover:shadow-xl hover:shadow-[#FD4102]/40 transition-all duration-300"
+            >
               <ShoppingCart className="mr-2 h-5 w-5" />
               Browse Marketplace
             </Button>
           </Link>
           <Link to="/my-datasets">
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="h-12 text-base">
               <Database className="mr-2 h-5 w-5" />
               View My Datasets
             </Button>
           </Link>
           <Link to="/subscriptions">
-            <Button size="lg" variant="outline">
+            <Button size="lg" variant="outline" className="h-12 text-base">
               <Repeat className="mr-2 h-5 w-5" />
               Manage Subscriptions
             </Button>
@@ -133,21 +191,25 @@ const BuyerDashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
-            <Card key={index}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
+            <Card
+              key={index}
+              className="border-2 border-transparent shadow-lg shadow-[#FD4102]/5 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 text-center group"
+            >
+              <CardContent className="p-6">
+                <div className="inline-block p-4 bg-gradient-to-br from-[#FD4102]/20 to-[#FD4102]/10 rounded-2xl mb-4">
+                  <stat.icon className="h-8 w-8 text-[#FD4102]" />
+                </div>
+                <p className="text-sm font-medium text-muted-foreground">
                   {stat.title}
-                </CardTitle>
-                <stat.icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <ArrowUpRight className="mr-1 h-3 w-3 text-success" />
-                  <span className="text-success">{stat.change}</span>
-                  <span className="ml-1">from last month</span>
+                </p>
+                <div className="text-3xl font-bold my-1">{stat.value}</div>
+                <div className="flex items-center justify-center text-xs text-muted-foreground">
+                  <ArrowUpRight className="mr-1 h-4 w-4 text-green-500" />
+                  <span className="text-green-500 font-semibold">
+                    {stat.change}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -155,75 +217,44 @@ const BuyerDashboard = () => {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
+          {/* Data Usage Chart */}
+          <div className="lg:col-span-2">
+            <Chart
+              chartData={dataUsage}
+              title="Data Usage Overview"
+              description="January - June 2024"
+              footerText="Trending up by 5.2% this month"
+              footerDescription="Showing data accessed for the last 6 months"
+            />
+          </div>
+
           {/* Recent Activity */}
-          <Card className="lg:col-span-2">
+          <Card className="border-2 border-gray-50 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="text-xl font-bold">
+                Recent Activity
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`rounded-full p-2 ${
-                          activity.type === "purchase"
-                            ? "bg-success/10 text-success"
-                            : activity.type === "access"
-                            ? "bg-primary/10 text-primary"
-                            : "bg-muted"
-                        }`}
-                      >
-                        {activity.type === "purchase" ? (
-                          <ShoppingCart className="h-4 w-4" />
-                        ) : activity.type === "access" ? (
-                          <Download className="h-4 w-4" />
-                        ) : (
-                          <Activity className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">{activity.title}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {activity.time}
+                  <div key={index}>
+                    <div className="flex justify-between items-start">
+                        <p className="text-sm font-medium text-gray-800">
+                            {activity.title}
                         </p>
-                      </div>
+                        {activity.details && (
+                            <p className={`text-sm font-semibold ${activity.type === 'purchase' || activity.type === 'subscription' ? 'text-red-500' : 'text-gray-500'} flex-shrink-0 ml-2`}>
+                                {activity.details}
+                            </p>
+                        )}
                     </div>
-                    {activity.details && (
-                      <Badge variant="secondary" className="font-semibold">
-                        {activity.details}
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recommended For You */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Recommended For You</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recommendedDatasets.map((dataset, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between"
-                  >
-                    <div>
-                      <p className="font-medium">{dataset.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {dataset.category} by {dataset.provider}
-                      </p>
+                    <div className="flex items-center text-xs text-muted-foreground mt-1">
+                        <ActivityIcon type={activity.type} />
+                        <p className="ml-1.5">
+                            {activity.time}
+                        </p>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View
-                    </Button>
                   </div>
                 ))}
               </div>
@@ -231,15 +262,36 @@ const BuyerDashboard = () => {
           </Card>
         </div>
 
-        {/* Data Usage Overview */}
-        <div className="mt-8">
-          <Chart
-            chartData={dataUsage}
-            title="Data Usage Overview"
-            description="January - June 2024"
-            footerText="Trending up by 5.2% this month"
-            footerDescription="Showing data accessed for the last 6 months"
-          />
+        {/* Recommended Datasets */}
+        <div className="mt-12">
+            <Card className="border-2 border-gray-50 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group">
+                <CardHeader>
+                <CardTitle className="text-xl font-bold">
+                    Recommended For You
+                </CardTitle>
+                </CardHeader>
+                <CardContent>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {recommendedDatasets.map((dataset, index) => (
+                    <div key={index} className="p-4 rounded-lg border border-gray-100 group-hover:border-[#FD4102]/20 transition-colors">
+                        <p className="font-bold text-md mb-1 line-clamp-1">
+                        {dataset.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground mb-3">
+                        <span className="font-semibold text-gray-600">{dataset.category}</span> by {dataset.provider}
+                        </p>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full border-[#FD4102]/50 text-[#FD4102] hover:bg-[#FD4102]/10 hover:text-[#FD4102]"
+                        >
+                            View Dataset
+                        </Button>
+                    </div>
+                    ))}
+                </div>
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>

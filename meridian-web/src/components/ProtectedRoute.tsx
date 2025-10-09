@@ -1,8 +1,13 @@
-import { useDid } from "../contexts/DidContext";
+import { useOne } from "../contexts/OneContext";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const { did } = useDid();
+  const { did, isLoading } = useOne();
+
+  // Don't redirect while loading authentication state
+  if (isLoading) {
+    return null; // or a loading spinner
+  }
 
   return did ? <Outlet /> : <Navigate to="/connect" replace />;
 };

@@ -18,8 +18,7 @@ import {
   ArrowLeft,
   KeyRound,
 } from "lucide-react";
-import { useDid } from "../contexts/DidContext";
-import { useUserType } from "../contexts/UserTypeContext";
+import { useOne } from "../contexts/OneContext";
 import {
   Tooltip,
   TooltipContent,
@@ -28,44 +27,27 @@ import {
 } from "@/components/ui/tooltip";
 
 const ConnectPageNavigation = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${
-        scrolled
-          ? "py-2 bg-white/80 backdrop-blur-sm"
-          : "py-4 bg-transparent"
-      }`}
+      className={`sticky top-0 z-50 w-full bg-black text-white`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src="/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-6 w-auto" />
-          <span
-            className={`text-xl font-black transition-colors ${
-              scrolled
-                ? "text-gray-800"
-                : "bg-gradient-to-r from-gray-900 to-gray-800 bg-clip-text text-transparent"
-            }`}
-          >
-            M.E.R.I.D.I.A.N.
-          </span>
-        </Link>
-        <Link to="/">
-          <Button variant="ghost">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Button>
-        </Link>
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          <Link to="/" className="flex items-center space-x-2">
+            <img src="/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-6 w-auto" />
+            <span
+              className={`text-xl font-bold tracking-tight`}
+            >
+              M.E.R.I.D.I.A.N.
+            </span>
+          </Link>
+          <Link to="/">
+            <Button variant="ghost" className={'text-white'}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
       </div>
     </header>
   );
@@ -73,8 +55,7 @@ const ConnectPageNavigation = () => {
 
 const Connect = () => {
   const navigate = useNavigate();
-  const { did, setDid } = useDid();
-  const { userType: globalUserType, setUserType: setGlobalUserType } = useUserType();
+  const { did, setDid, userType: globalUserType, setUserType: setGlobalUserType } = useOne();
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState<"provider" | "buyer" | null>(null);
   const [walletId, setWalletId] = useState<string | null>(null);
@@ -354,7 +335,7 @@ const Connect = () => {
           <div className={`p-3 rounded-xl mb-3 transition-all duration-300 ${
             userType === type 
               ? "bg-gradient-to-br from-[#FD4102] to-[#FF6B35] shadow-md" 
-              : "bg-gray-100 group-hover:bg-[#FD4102]/10"
+              : "bg-[#FD4102]/10 "
           }`}>
             {icons[type]}
           </div>
@@ -372,7 +353,7 @@ const Connect = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white relative">
+    <div className="min-h-screen bg-white relative flex flex-col">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 -left-40 w-96 h-96 bg-[#FD4102]/3 rounded-full blur-3xl"></div>
@@ -381,9 +362,9 @@ const Connect = () => {
 
       <ConnectPageNavigation />
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <div className="container mx-auto px-4 pt-32 pb-12 md:pt-40 md:pb-20">
-          <div className="mx-auto max-w-md w-full">
+      <main className="flex-grow flex items-center justify-center">
+        <div className="relative z-10 container mx-auto px-4 py-12 md:py-20">
+          <div className="mx-auto max-w-lg w-full">
             <div className="mb-8 text-center animate-fade-in">
               <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
                 <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">
@@ -402,7 +383,7 @@ const Connect = () => {
             {authAction === 'login' && renderLogin()}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

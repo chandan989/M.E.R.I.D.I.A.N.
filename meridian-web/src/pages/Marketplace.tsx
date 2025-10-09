@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Star, Database, Eye, Coins, Grid3x3, List, Repeat } from "lucide-react";
+import { Search, Star, Database, Eye, Coins, Grid3x3, List, Repeat, ShoppingCart } from "lucide-react";
 
 const Marketplace = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -106,26 +106,93 @@ const Marketplace = () => {
     },
   ];
 
+  const DatasetCard = ({ dataset, isList = false }) => (
+    <Card
+      className={`border-2 border-transparent shadow-lg shadow-[#FD4102]/5 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group ${isList ? 'flex' : ''}`}
+    >
+      <div className={isList ? 'w-2/3 p-6' : 'p-6'}>
+        <div className="flex items-start justify-between mb-4">
+          <Badge variant="outline" className="border-[#FD4102]/50 text-[#FD4102]">{dataset.category}</Badge>
+          <div className="flex gap-2">
+            {dataset.subscription && <Badge variant="outline" className="border-blue-500 text-blue-500">Subscription</Badge>}
+            {dataset.featured && <Badge className="bg-gradient-to-r from-[#FD4102] to-[#FF6B35] text-white">Featured</Badge>}
+          </div>
+        </div>
+        <h3 className="text-lg font-bold text-gray-800 group-hover:text-[#FD4102] transition-colors line-clamp-1">
+          {dataset.title}
+        </h3>
+        <p className="text-sm text-muted-foreground mt-2 line-clamp-2 h-[40px]">
+          {dataset.description}
+        </p>
+        <div className="flex items-center justify-between text-xs text-muted-foreground mt-4">
+          <span className="flex items-center gap-1">
+            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+            <span className="font-semibold text-gray-700">{dataset.quality}</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            {dataset.views}
+          </span>
+          <span className="flex items-center gap-1">
+            <Database className="h-4 w-4" />
+            {dataset.sales} sales
+          </span>
+        </div>
+      </div>
+      <div className={`p-6 flex flex-col justify-between items-center text-center ${isList ? 'w-1/3 border-l' : 'border-t'}`}>
+        <div className="text-2xl font-black text-gray-800">
+          {dataset.price} CTC
+          {dataset.subscription && <span className="text-sm font-normal text-muted-foreground">/month</span>}
+        </div>
+        <Link to={`/marketplace/${dataset.id}`} className="w-full">
+          <Button
+            size="sm"
+            className="w-full mt-4 bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30 hover:shadow-xl hover:shadow-[#FD4102]/40 transition-all duration-300"
+          >
+            {dataset.subscription ? <Repeat className="mr-2 h-4 w-4" /> : <ShoppingCart className="mr-2 h-4 w-4" />}
+            View Details
+          </Button>
+        </Link>
+      </div>
+    </Card>
+  );
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-white text-gray-800 animate-fade-in relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-[#FD4102]/3 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 right-1/4 w-64 h-64 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-12 relative z-10">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="mb-2 text-4xl font-bold">Discover Datasets</h1>
-          <p className="text-muted-foreground">Browse and purchase high-quality data from verified providers</p>
+        <div className="mb-12 text-center">
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+            <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">
+              Data Marketplace
+            </span>
+          </div>
+          <h1 className="mb-2 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+            Discover Premium Datasets
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Explore and acquire high-quality data from a universe of verified providers.
+          </p>
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Filters Sidebar */}
-          <aside className="w-full lg:w-64 space-y-6">
-            <Card>
+          <aside className="w-full lg:w-72 space-y-6">
+            <Card className="border-2 border-gray-50 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group p-2">
               <CardHeader>
-                <h3 className="font-semibold">Filters</h3>
+                <h3 className="font-bold text-xl text-gray-800">Filter & Refine</h3>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Search */}
                 <div>
-                  <Label className="mb-2 block text-sm font-medium">Search</Label>
+                  <Label className="mb-2 block text-sm font-medium">Keyword Search</Label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input placeholder="Search datasets..." className="pl-9" />
@@ -170,12 +237,12 @@ const Marketplace = () => {
                   <Label className="mb-3 block text-sm font-medium">Minimum Quality</Label>
                   <div className="flex items-center space-x-1">
                     {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="h-5 w-5 fill-primary text-primary" />
+                      <Star key={star} className="h-5 w-5 text-gray-300 fill-gray-300 cursor-pointer hover:text-yellow-400 hover:fill-yellow-400 transition-colors" />
                     ))}
                   </div>
                 </div>
 
-                <Button className="w-full" variant="outline">
+                <Button className="w-full border-[#FD4102]/50 text-[#FD4102] hover:bg-[#FD4102]/10 hover:text-[#FD4102]" variant="outline">
                   Reset Filters
                 </Button>
               </CardContent>
@@ -185,9 +252,9 @@ const Marketplace = () => {
           {/* Main Content */}
           <div className="flex-1">
             {/* Controls */}
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-lg bg-white/50 backdrop-blur-sm p-4 border border-gray-100">
               <div className="text-sm text-muted-foreground">
-                Showing <span className="font-semibold">{datasets.length}</span> datasets
+                Showing <span className="font-semibold text-gray-800">{datasets.length}</span> datasets
               </div>
               <div className="flex items-center gap-3">
                 <Select defaultValue="newest">
@@ -202,18 +269,20 @@ const Marketplace = () => {
                     <SelectItem value="rated">Highest Rated</SelectItem>
                   </SelectContent>
                 </Select>
-                <div className="flex gap-1">
+                <div className="flex gap-1 rounded-md p-1 bg-gray-100">
                   <Button
                     size="icon"
-                    variant={viewMode === "grid" ? "default" : "outline"}
+                    variant={viewMode === "grid" ? "default" : "ghost"}
                     onClick={() => setViewMode("grid")}
+                    className={viewMode === 'grid' ? 'bg-gradient-to-r from-[#FD4102] to-[#FF6B35] text-white' : ''}
                   >
                     <Grid3x3 className="h-4 w-4" />
                   </Button>
                   <Button
                     size="icon"
-                    variant={viewMode === "list" ? "default" : "outline"}
+                    variant={viewMode === "list" ? "default" : "ghost"}
                     onClick={() => setViewMode("list")}
+                    className={viewMode === 'list' ? 'bg-gradient-to-r from-[#FD4102] to-[#FF6B35] text-white' : ''}
                   >
                     <List className="h-4 w-4" />
                   </Button>
@@ -221,124 +290,17 @@ const Marketplace = () => {
               </div>
             </div>
 
-            {/* Featured Section */}
-            <div className="mb-8">
-              <h2 className="mb-4 text-2xl font-bold">Featured Datasets</h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {datasets
-                  .filter((d) => d.featured)
-                  .slice(0, 3)
-                  .map((dataset) => (
-                    <Card key={dataset.id} className="group hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="mb-2 flex items-start justify-between">
-                          <Badge variant="secondary">{dataset.category}</Badge>
-                          <Badge className="bg-primary">Featured</Badge>
-                        </div>
-                        <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                          {dataset.title}
-                        </h3>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-                          {dataset.description}
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-primary text-primary" />
-                            <span className="font-semibold">{dataset.quality}</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Eye className="h-4 w-4" />
-                              {dataset.views}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Database className="h-4 w-4" />
-                              {dataset.sales}
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-lg font-bold">
-                          {dataset.subscription ? (
-                            <Repeat className="h-5 w-5 text-primary" />
-                          ) : (
-                            <Coins className="h-5 w-5 text-primary" />
-                          )}
-                          {dataset.price} CTC {dataset.subscription ? "/month" : ""}
-                        </div>
-                        <Link to={`/marketplace/${dataset.id}`}>
-                          <Button>View Details</Button>
-                        </Link>
-                      </CardFooter>
-                    </Card>
-                  ))}
-              </div>
-            </div>
-
-            {/* All Datasets */}
-            <div>
-              <h2 className="mb-4 text-2xl font-bold">All Datasets</h2>
-              <div
-                className={
-                  viewMode === "grid"
-                    ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-                    : "space-y-4"
-                }
-              >
-                {datasets.map((dataset) => (
-                  <Card key={dataset.id} className="group hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="mb-2 flex items-start justify-between">
-                        <Badge variant="secondary">{dataset.category}</Badge>
-                        <div className="flex gap-2">
-                          {dataset.subscription && <Badge variant="outline" className="border-blue-500 text-blue-500">Subscription</Badge>}
-                          {dataset.featured && <Badge className="bg-primary">Featured</Badge>}
-                        </div>
-                      </div>
-                      <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
-                        {dataset.title}
-                      </h3>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="mb-4 text-sm text-muted-foreground line-clamp-2">
-                        {dataset.description}
-                      </p>
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span className="font-semibold">{dataset.quality}</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Eye className="h-4 w-4" />
-                            {dataset.views}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Database className="h-4 w-4" />
-                            {dataset.sales}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 text-lg font-bold">
-                        {dataset.subscription ? (
-                          <Repeat className="h-5 w-5 text-primary" />
-                        ) : (
-                          <Coins className="h-5 w-5 text-primary" />
-                        )}
-                        {dataset.price} CTC {dataset.subscription ? "/month" : ""}
-                      </div>
-                      <Link to={`/marketplace/${dataset.id}`}>
-                        <Button>View Details</Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
+            {/* Datasets */}
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid gap-6 sm:grid-cols-2 xl:grid-cols-3"
+                  : "space-y-4"
+              }
+            >
+              {datasets.map((dataset) => (
+                <DatasetCard key={dataset.id} dataset={dataset} isList={viewMode === 'list'} />
+              ))}
             </div>
           </div>
         </div>

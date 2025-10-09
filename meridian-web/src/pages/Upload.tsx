@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,11 +23,25 @@ import {
   Shield,
   Coins,
 } from "lucide-react";
+import { useOne } from "@/contexts/OneContext";
 
 const Upload = () => {
   const navigate = useNavigate();
+  const { did, userType, isLoading } = useOne();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!did) {
+        toast.error("You must be logged in to upload datasets.");
+        navigate("/connect");
+      } else if (userType === 'buyer') {
+        navigate("/marketplace");
+        toast.error("You must be a data provider to upload datasets.");
+      }
+    }
+  }, [did, userType, isLoading, navigate]);
 
   const handleUploadFile = () => {
     setLoading(true);
@@ -55,6 +69,15 @@ const Upload = () => {
       navigate("/my-datasets");
     }, 2500);
   };
+
+  if (isLoading || !did || userType !== 'provider') {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="ml-4">Verifying authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white from-background to-secondary/20 py-12">

@@ -54,12 +54,12 @@ const LandingPageNavigation = () => {
   const isActive = (id: string) => activeSection === id;
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[#FD4102] text-white">
+    <nav className="sticky top-0 z-50 w-full bg-black text-white">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="flex items-center space-x-2">
-            <img src="/logo-black.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-8 w-8" />
+            <img src="/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-6 w-auto" />
             <span className="text-xl font-bold tracking-tight">M.E.R.I.D.I.A.N.</span>
           </a>
 

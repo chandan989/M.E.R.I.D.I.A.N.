@@ -2,16 +2,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Wallet, LogOut } from "lucide-react";
 import { useState } from "react";
-import { useDid } from "../contexts/DidContext";
-import { useUserType } from "../contexts/UserTypeContext";
+import { useOne } from "../contexts/OneContext";
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { did, setDid } = useDid();
-  const { userType } = useUserType();
+  const { did, setDid, userType, setUserType } = useOne();
 
   const isActive = (path: string) => {
     if (path.includes('dashboard')) {
@@ -22,6 +20,7 @@ const Navigation = () => {
 
   const handleLogout = () => {
     setDid(null);
+    setUserType(null);
     setDropdownOpen(false);
     navigate("/connect");
   };
@@ -39,7 +38,7 @@ const Navigation = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <img src="/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-8 w-8" />
+            <img src="/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" className="h-6 w-auto" />
             <span className="text-xl font-bold tracking-tight">M.E.R.I.D.I.A.N.</span>
           </Link>
 
