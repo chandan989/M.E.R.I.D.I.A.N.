@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Shield,
   Coins,
@@ -105,10 +105,17 @@ const Landing = () => {
   ];
 
   return (
-    <div className="animate-fade-in">
+    <div className="bg-white text-gray-800 animate-fade-in relative">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-[#FD4102]/3 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 right-1/4 w-64 h-64 bg-[#FD4102]/5 rounded-full blur-3xl"></div>
+      </div>
+
       {!isInitialLoading && <LandingPageNavigation />}
       {/* Hero Section */}
-      <section id="home">
+      <section id="home" className="relative z-10">
         <Suspense fallback={<Loading />}>
           <HeroWithLoadingComplete />
         </Suspense>
@@ -116,146 +123,180 @@ const Landing = () => {
 
       {/* Only show sections after loading completes */}
       {!isInitialLoading && (
-        <>
+        <div className="relative z-10">
           {/* Problem Statement */}
-          <section id="problem" className="bg-background py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">The Problem We're Solving</h2>
-            <p className="text-lg text-muted-foreground">
-              Current AI systems are built on biased, exploited data. It's time for change.
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2">
-            <Card className="border-destructive/20">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-block rounded-lg bg-destructive/10 p-3">
-                  <Zap className="h-8 w-8 text-destructive" />
+          <section id="problem" className="py-16 md:py-24">
+            <div className="container mx-auto px-4">
+              <div className="mx-auto max-w-3xl text-center mb-16">
+                <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+                  <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">The Core Problem</span>
                 </div>
-                <h3 className="mb-3 text-2xl font-bold">AI Bias Crisis</h3>
-                <p className="text-muted-foreground">
-                  Underrepresented communities are excluded from AI training data, leading to discriminatory
-                  outcomes in healthcare, finance, and criminal justice systems.
+                <h2 className="mb-4 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                  Broken Data, Biased AI
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Today's digital world is built on a flawed foundation of data exploitation and algorithmic bias.
                 </p>
-              </CardContent>
-            </Card>
-            <Card className="border-destructive/20">
-              <CardContent className="p-8">
-                <div className="mb-4 inline-block rounded-lg bg-destructive/10 p-3">
-                  <Database className="h-8 w-8 text-destructive" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold">Data Exploitation</h3>
-                <p className="text-muted-foreground">
-                  Tech giants profit billions from your data while you get nothing. No control, no
-                  compensation, no transparency in how your information is used.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Solution Overview */}
-      <section id="solution" className="bg-gray-50 py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">How M.E.R.I.D.I.A.N. Changes Everything</h2>
-            <p className="text-lg text-muted-foreground">
-              A complete ecosystem for data sovereignty, powered by Web5
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-4">
-            {steps.map((step, index) => (
-              <div key={index} className="relative">
-                <Card className="group h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
-                  <CardContent className="p-6">
-                    <div className="mb-4 text-5xl font-black text-primary/20 group-hover:text-[#FD4102]">
-                      {step.number}
+              </div>
+              <div className="grid gap-8 md:grid-cols-2">
+                <Card className="animate-fade-in border-2 shadow-2xl shadow-[#FD4102]/10 hover:shadow-[#FD4102]/20 transition-all duration-300">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 bg-gradient-to-br from-[#FD4102]/20 to-[#FD4102]/10 rounded-2xl">
+                        <Zap className="h-8 w-8 text-[#FD4102]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl font-bold">The AI Bias Crisis</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Algorithms that perpetuate inequality
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="mb-2 text-xl font-bold">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      Underrepresented communities are excluded from AI training data, leading to discriminatory
+                      outcomes in healthcare, finance, and criminal justice systems. This isn't a bug; it's a feature of the current system.
+                    </p>
                   </CardContent>
                 </Card>
-                {index < steps.length - 1 && (
-                  <div className="absolute -right-3 top-1/2 hidden md:block">
-                    <ArrowRight className="h-6 w-6 text-primary" />
+                <Card className="animate-fade-in border-2 shadow-2xl shadow-[#FD4102]/10 hover:shadow-[#FD4102]/20 transition-all duration-300">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 bg-gradient-to-br from-[#FD4102]/20 to-[#FD4102]/10 rounded-2xl">
+                        <Database className="h-8 w-8 text-[#FD4102]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl font-bold">Your Data, Their Profits</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          You are the product
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      Tech giants profit billions from your data while you get nothing. No control, no
+                      compensation, no transparency. Your personal information is traded in a multi-billion dollar industry without your consent.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </section>
+
+          {/* Solution Overview */}
+          <section id="solution" className="py-16 md:py-24 bg-gray-50/50">
+            <div className="container mx-auto px-4">
+              <div className="mx-auto max-w-3xl text-center mb-16">
+                <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+                  <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">The Solution</span>
+                </div>
+                <h2 className="mb-4 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                  The M.E.R.I.D.I.A.N. Ecosystem
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  A four-step process to reclaim your data and build a fairer AI-powered future.
+                </p>
+              </div>
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                {steps.map((step, index) => (
+                  <Card key={index} className="border-2 border-transparent hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group">
+                    <CardContent className="p-6">
+                      <div className="mb-4 text-5xl font-black text-gray-200 group-hover:text-[#FD4102] transition-colors duration-300">
+                        {step.number}
+                      </div>
+                      <h3 className="mb-2 text-xl font-bold">{step.title}</h3>
+                      <p className="text-sm text-muted-foreground">{step.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Key Features */}
+          <section id="features" className="py-16 md:py-24">
+            <div className="container mx-auto px-4">
+              <div className="mx-auto max-w-3xl text-center mb-16">
+                <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+                  <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">Core Features</span>
+                </div>
+                <h2 className="mb-4 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                  A New Paradigm for Data
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Our platform is packed with features designed for security, sovereignty, and fair monetization.
+                </p>
+              </div>
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {features.map((feature, index) => (
+                  <Card key={index} className="border-2 border-transparent shadow-lg shadow-[#FD4102]/5 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 text-center group">
+                    <CardContent className="p-8">
+                      <div className="inline-block p-4 bg-gradient-to-br from-[#FD4102]/20 to-[#FD4102]/10 rounded-2xl mb-4">
+                        <feature.icon className="h-8 w-8 text-[#FD4102]" />
+                      </div>
+                      <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Statistics */}
+          <section id="stats" className="py-16 md:py-24 bg-gradient-to-r from-[#FD4102] to-[#FF6B35]">
+            <div className="container mx-auto px-4">
+              <div className="grid gap-8 md:grid-cols-4">
+                {stats.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="mb-2 text-4xl font-black text-white md:text-5xl">{stat.value}</div>
+                    <div className="text-sm text-white/80 uppercase tracking-wider">{stat.label}</div>
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
 
-      {/* Key Features */}
-      <section id="features" className="bg-background py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">Powerful Features</h2>
-            <p className="text-lg text-muted-foreground">
-              Everything you need to monetize your data securely
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="mb-4 inline-block rounded-lg bg-primary/10 p-3 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <feature.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Statistics */}
-      <section id="stats" className="bg-primary py-16 text-primary-foreground md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid gap-8 md:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="mb-2 text-4xl font-black md:text-5xl">{stat.value}</div>
-                <div className="text-sm opacity-90">{stat.label}</div>
+          {/* CTA Section */}
+          <section id="cta" className="py-16 md:py-24">
+            <div className="container mx-auto px-4">
+              <div className="mx-auto max-w-4xl">
+                <Card className="animate-fade-in border-2 shadow-2xl shadow-[#FD4102]/10 hover:shadow-[#FD4102]/20 transition-all duration-300 bg-gradient-to-br from-[#FD4102]/5 via-transparent to-transparent">
+                  <CardContent className="p-12 text-center">
+                    <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-[#FD4102]/10 to-[#FD4102]/5 rounded-full">
+                      <span className="text-sm font-semibold text-[#FD4102] uppercase tracking-wider">
+                        Get Started Now
+                      </span>
+                    </div>
+                    <h2 className="mb-4 text-4xl md:text-5xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                      Join the Data Revolution
+                    </h2>
+                    <p className="mb-8 text-lg text-muted-foreground max-w-2xl mx-auto">
+                      Take the first step towards data sovereignty. Create your Decentralized Identity and join a global community building a fairer digital world.
+                    </p>
+                    <div className="flex justify-center">
+                      <Link to="/connect">
+                        <Button
+                          size="lg"
+                          className="h-14 text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30 hover:shadow-xl hover:shadow-[#FD4102]/40 transition-all duration-300"
+                        >
+                          <CheckCircle2 className="mr-2 h-6 w-6" />
+                          Create Your DID in Seconds
+                          <ArrowRight className="ml-2 h-6 w-6" />
+                        </Button>
+                      </Link>
+                    </div>
+                    <p className="mt-6 text-sm text-muted-foreground">
+                      Join <span className="font-semibold text-[#FD4102]">50,000+</span> data providers and buyers.
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
-            ))}
-          </div>
+            </div>
+          </section>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section id="cta" className="bg-background py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
-            <CardContent className="p-12 text-center">
-              <h2 className="mb-4 text-3xl font-bold md:text-4xl">Join the Data Revolution</h2>
-              <p className="mb-8 text-lg text-muted-foreground mx-auto max-w-2xl">
-                Start monetizing your data today. Build fairer AI. Take control of your digital future.
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-                <Link to="/connect">
-                  <Button size="lg" className="w-full sm:w-auto">
-                    <CheckCircle2 className="mr-2 h-5 w-5" />
-                    Create Your DID
-                  </Button>
-                </Link>
-                <Link to="/about">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
-              <p className="mt-6 text-sm text-muted-foreground">
-                Join <span className="font-semibold text-primary">50,000+</span> data providers worldwide
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-        </>
       )}
     </div>
   );

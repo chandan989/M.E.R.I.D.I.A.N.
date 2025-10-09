@@ -1,19 +1,34 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Wallet } from "lucide-react";
+import { Menu, X, Wallet, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useDid } from "../contexts/DidContext";
+import { useUserType } from "../contexts/UserTypeContext";
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const location = useLocation();
-  const { did } = useDid();
+  const navigate = useNavigate();
+  const { did, setDid } = useDid();
+  const { userType } = useUserType();
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path.includes('dashboard')) {
+        return location.pathname.startsWith(path);
+    }
+    return location.pathname === path;
+  }
+
+  const handleLogout = () => {
+    setDid(null);
+    setDropdownOpen(false);
+    navigate("/connect");
+  };
 
   const navLinks = [
     { path: "/marketplace", label: "Marketplace" },
-    { path: "/dashboard", label: "Dashboard" },
+    ...(userType ? [{ path: userType === 'provider' ? '/provider-dashboard' : '/buyer-dashboard', label: "Dashboard" }] : []),
     { path: "/about", label: "About" },
     { path: "/docs", label: "Docs" },
   ];
@@ -48,9 +63,27 @@ const Navigation = () => {
           {/* Actions */}
           <div className="flex items-center space-x-3">
             {did ? (
-              <div className="hidden md:flex items-center space-x-2 rounded-md bg-gray-800 px-3 py-2 text-sm font-medium text-white">
-                <Wallet className="h-4 w-4 text-[#FD4102]" />
-                <span className="truncate">{did}</span>
+              <div className="relative">
+                <Button
+                  variant="secondary"
+                  className="hidden md:inline-flex"
+                  onClick={() => setDropdownOpen(!isDropdownOpen)}
+                >
+                  <Wallet className="mr-2 h-4 w-4" />
+                  <span className="truncate">{did}</span>
+                </Button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left text-black"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link to="/connect">

@@ -1,0 +1,56 @@
+
+/* src/styles/cursor.css */
+body {
+  --cursor-fill: #FD4102;
+  --cursor-stroke: #FFFFFF;
+  --cursor-stroke-width: 1px;
+}
+
+.custom-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease-out;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--cursor-fill);
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-outline {
+  width: 40px;
+  height: 40px;
+  border: var(--cursor-stroke-width) solid var(--cursor-fill);
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: all 0.2s ease-out;
+}
+
+body:hover .cursor-outline {
+  opacity: 1;
+}
+
+/* Pointer styles */
+.custom-pointer .cursor-dot {
+  opacity: 0;
+}
+
+.custom-pointer .cursor-outline {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(253, 65, 2, 0.2);
+  border-color: rgba(253, 65, 2, 0.5);
+}
+
+/* Hide default cursor */
+body, a, button {
+  cursor: none;
+}

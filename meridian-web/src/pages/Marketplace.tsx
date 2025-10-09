@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Star, Database, Eye, Coins, Grid3x3, List } from "lucide-react";
+import { Search, Star, Database, Eye, Coins, Grid3x3, List, Repeat } from "lucide-react";
 
 const Marketplace = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -69,15 +69,16 @@ const Marketplace = () => {
     },
     {
       id: 4,
-      title: "Microfinance Lending Patterns",
+      title: "Real-time Stock Market Data",
       category: "Finance",
-      price: 450,
+      price: 50,
       quality: 4.9,
       views: 1089,
       sales: 112,
-      description: "10 years of microfinance loan data from underbanked communities in 30 countries.",
+      description: "Live feed of stock market data from major exchanges.",
       provider: "FinInclude",
       featured: false,
+      subscription: true,
     },
     {
       id: 5,
@@ -261,8 +262,12 @@ const Marketplace = () => {
                       </CardContent>
                       <CardFooter className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-lg font-bold">
-                          <Coins className="h-5 w-5 text-primary" />
-                          {dataset.price} CTC
+                          {dataset.subscription ? (
+                            <Repeat className="h-5 w-5 text-primary" />
+                          ) : (
+                            <Coins className="h-5 w-5 text-primary" />
+                          )}
+                          {dataset.price} CTC {dataset.subscription ? "/month" : ""}
                         </div>
                         <Link to={`/marketplace/${dataset.id}`}>
                           <Button>View Details</Button>
@@ -288,7 +293,10 @@ const Marketplace = () => {
                     <CardHeader>
                       <div className="mb-2 flex items-start justify-between">
                         <Badge variant="secondary">{dataset.category}</Badge>
-                        {dataset.featured && <Badge className="bg-primary">Featured</Badge>}
+                        <div className="flex gap-2">
+                          {dataset.subscription && <Badge variant="outline" className="border-blue-500 text-blue-500">Subscription</Badge>}
+                          {dataset.featured && <Badge className="bg-primary">Featured</Badge>}
+                        </div>
                       </div>
                       <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">
                         {dataset.title}
@@ -317,8 +325,12 @@ const Marketplace = () => {
                     </CardContent>
                     <CardFooter className="flex items-center justify-between">
                       <div className="flex items-center gap-1 text-lg font-bold">
-                        <Coins className="h-5 w-5 text-primary" />
-                        {dataset.price} CTC
+                        {dataset.subscription ? (
+                          <Repeat className="h-5 w-5 text-primary" />
+                        ) : (
+                          <Coins className="h-5 w-5 text-primary" />
+                        )}
+                        {dataset.price} CTC {dataset.subscription ? "/month" : ""}
                       </div>
                       <Link to={`/marketplace/${dataset.id}`}>
                         <Button>View Details</Button>

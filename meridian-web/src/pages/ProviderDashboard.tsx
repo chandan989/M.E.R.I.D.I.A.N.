@@ -12,9 +12,11 @@ import {
   Activity,
   ArrowUpRight,
   Star,
+  User,
 } from "lucide-react";
+import { Chart } from "@/components/charts";
 
-const Dashboard = () => {
+const ProviderDashboard = () => {
   const stats = [
     {
       title: "Total Revenue",
@@ -94,13 +96,26 @@ const Dashboard = () => {
     },
   ];
 
+  const revenueData = [
+    { month: "Jan", desktop: 1200 },
+    { month: "Feb", desktop: 1500 },
+    { month: "Mar", desktop: 1300 },
+    { month: "Apr", desktop: 1800 },
+    { month: "May", desktop: 2100 },
+    { month: "Jun", desktop: 2400 },
+  ];
+
   return (
-    <div className="min-h-screen bg-secondary">
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="mb-2 text-4xl font-bold">Welcome back, DataProvider!</h1>
-          <p className="text-muted-foreground">Here's what's happening with your data today.</p>
+          <h1 className="mb-2 text-4xl font-bold">
+            Welcome back, DataProvider!
+          </h1>
+          <p className="text-muted-foreground">
+            Here's what's happening with your data today.
+          </p>
         </div>
 
         {/* Quick Actions */}
@@ -123,6 +138,12 @@ const Dashboard = () => {
               View Analytics
             </Button>
           </Link>
+          <Link to="/provider-profile/1">
+            <Button size="lg" variant="outline">
+              <User className="mr-2 h-5 w-5" />
+              View Profile
+            </Button>
+          </Link>
         </div>
 
         {/* Stats Grid */}
@@ -130,7 +151,9 @@ const Dashboard = () => {
           {stats.map((stat, index) => (
             <Card key={index}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -154,15 +177,20 @@ const Dashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0"
+                  >
                     <div className="flex items-center gap-4">
-                      <div className={`rounded-full p-2 ${
-                        activity.type === "sale"
-                          ? "bg-success/10 text-success"
-                          : activity.type === "view"
-                          ? "bg-primary/10 text-primary"
-                          : "bg-muted"
-                      }`}>
+                      <div
+                        className={`rounded-full p-2 ${
+                          activity.type === "sale"
+                            ? "bg-success/10 text-success"
+                            : activity.type === "view"
+                            ? "bg-primary/10 text-primary"
+                            : "bg-muted"
+                        }`}
+                      >
                         {activity.type === "sale" ? (
                           <DollarSign className="h-4 w-4" />
                         ) : activity.type === "view" ? (
@@ -173,7 +201,9 @@ const Dashboard = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium">{activity.title}</p>
-                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {activity.time}
+                        </p>
                       </div>
                     </div>
                     {activity.amount && (
@@ -198,7 +228,9 @@ const Dashboard = () => {
                   <div key={index} className="space-y-2">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-sm font-medium line-clamp-1">{dataset.name}</p>
+                        <p className="text-sm font-medium line-clamp-1">
+                          {dataset.name}
+                        </p>
                         <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <DollarSign className="h-3 w-3" />
@@ -221,30 +253,28 @@ const Dashboard = () => {
                   </div>
                 ))}
               </div>
-              <Button variant="outline" className="mt-4 w-full">
-                View All Datasets
-              </Button>
+              <Link to="/my-datasets" className="w-full">
+                <Button variant="outline" className="mt-4 w-full">
+                  View All Datasets
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
 
         {/* Revenue Chart Placeholder */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Revenue Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex h-64 items-center justify-center rounded-lg bg-muted">
-              <div className="text-center">
-                <TrendingUp className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">Revenue chart visualization</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mt-8">
+          <Chart
+            chartData={revenueData}
+            title="Revenue Overview"
+            description="January - June 2024"
+            footerText="Trending up by 15.2% this month"
+            footerDescription="Showing revenue for the last 6 months"
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default ProviderDashboard;
