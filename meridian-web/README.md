@@ -1,78 +1,61 @@
-# Welcome to your Lovable project
+# M.E.R.I.D.I.A.N. Web App
 
-## Project info
+This is the frontend for the **M.E.R.I.D.I.A.N.** project, a decentralized data marketplace. This web application provides the user interface for both Data Providers and Data Buyers to interact with the M.E.R.I.D.I.A.N. network.
 
-**URL**: https://lovable.dev/projects/b770d83a-9266-41ce-9d2e-d22c289c3edf
+## ✨ Key Features
 
-## How can I edit this code?
+*   **Self-Sovereign Identity**: Connect using Web5 DIDs.
+*   **Decentralized Data Management**: Upload and manage data in your personal Decentralized Web Node (DWN).
+*   **Data Marketplace**: Browse, search, and discover datasets listed for sale.
+*   **Secure Transactions**: Purchase data license NFTs on the Creditcoin blockchain using a Web3 wallet.
+*   **Data Access**: Access purchased data directly from the provider's DWN after successful license verification.
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+*   **Framework**: [React](https://reactjs.org/) with [Vite](https://vitejs.dev/)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Identity & Storage**: [Web5.js SDK](https://developer.tbd.website/projects/web5/) for DIDs and DWNs.
+*   **Blockchain Interaction**: [Ethers.js](https://ethers.io/) for interacting with Creditcoin smart contracts.
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) components.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b770d83a-9266-41ce-9d2e-d22c289c3edf) and start prompting.
+## 🚀 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+Before you begin, ensure you have the following installed:
+*   ✅ Node.js v18+ & npm
+*   🔑 A Web5 enabled agent/wallet
+*   🌐 MetaMask or similar Web3 wallet extension configured for Creditcoin.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📦 Installation & Setup
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1.  **Navigate to the web app directory**
+    If you are at the root of the project, navigate to the `meridian-web` directory.
+    ```bash
+    cd meridian-web
+    ```
 
-Follow these steps:
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3.  **Environment Variables**
+    Create a `.env.local` file by copying the example file:
+    ```bash
+    cp .env.example .env.local
+    ```
+    Now, edit `.env.local` to include the necessary environment variables, such as the deployed smart contract addresses and the backend API endpoint.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4.  **Run the Development Server**
+    ```bash
+    npm run dev
+    ```
+    The frontend will be available at `http://localhost:3000`.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🏛️ Architecture Overview
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b770d83a-9266-41ce-9d2e-d22c289c3edf) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-
-## Architecture Diagram
+The diagram below shows how the web app fits into the overall M.E.R.I.D.I.A.N. architecture.
 
 ```mermaid
 graph TD
