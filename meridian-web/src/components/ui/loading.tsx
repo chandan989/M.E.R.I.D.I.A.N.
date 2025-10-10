@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Logo from '../../../../logo.svg';
 
 const Loading = () => {
   return (
@@ -17,7 +16,7 @@ const Loading = () => {
         }}
         style={{ width: '100px', height: '100px' }}
       >
-        <img src={Logo} alt="Loading..." className="h-full w-full" />
+        <img src={"logo.svg"} alt="Loading..." className="h-full w-full" />
       </motion.div>
     </div>
   );
