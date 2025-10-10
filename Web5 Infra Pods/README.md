@@ -28,8 +28,12 @@ graph TD
     A -- "Enables" --> C
     B -- "Enables" --> D
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style A fill:#FFA500,stroke:#000000,stroke-width:2px,color:#000000
+    style B fill:#FFA500,stroke:#000000,stroke-width:2px,color:#000000
+    style C fill:#000000,stroke:#FFA500,stroke-width:2px,color:#FFFFFF
+    style D fill:#000000,stroke:#FFA500,stroke-width:2px,color:#FFFFFF
+    style E fill:#333,stroke:#000,stroke-width:2px,color:#fff
+    style F fill:#333,stroke:#000,stroke-width:2px,color:#fff
 ```
 
 ## Importance and Relevance
@@ -79,9 +83,10 @@ graph TD
     App -- "3. Reads DWN endpoint from DID Doc" --> DID_Doc
     App -- "4. Interacts with" --> DWN
 
-    style App fill:#bbf,stroke:#333,stroke-width:2px
-    style DID_DHT fill:#f9f,stroke:#333,stroke-width:2px
-    style DWN fill:#ccf,stroke:#333,stroke-width:2px
+    style App fill:#FFA500,stroke:#000000,stroke-width:2px,color:#000000
+    style DID_DHT fill:#000000,stroke:#FFA500,stroke-width:2px,color:#FFFFFF
+    style DWN fill:#000000,stroke:#FFA500,stroke-width:2px,color:#FFFFFF
+    style DID_Doc fill:#333,stroke:#000,stroke-width:2px,color:#fff
 ```
 
 **Explanation of the flow:**
