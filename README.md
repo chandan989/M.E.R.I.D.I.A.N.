@@ -171,84 +171,91 @@ As an MVP, we've designed a robust and scalable architecture that showcases the 
 
 ```mermaid
 graph TD
-    subgraph User_Layer["User Layer"]
-        DataProvider[👤 Data Provider]
-        DataBuyer[👥 Data Buyer]
-    end
+    %% --- GLOBAL STYLING ---
+    classDef rounded fill:#ffffff,stroke:#aaa,stroke-width:1px,rx:10,ry:10;
+    classDef section fill:#f9fafb,stroke:#555,stroke-width:1px,rx:15,ry:15,color:#111,font-weight:bold;
+    classDef highlight fill:#fefcbf,stroke:#d69e2e,rx:10,ry:10;
+    classDef ai fill:#fff0e6,stroke:#dd6b20,rx:10,ry:10;
+    classDef db fill:#e6fffa,stroke:#38a169,rx:10,ry:10;
+    classDef chain fill:#f0e6ff,stroke:#805ad5,rx:10,ry:10;
+    classDef actor fill:#e2e8f0,stroke:#4a5568,rx:10,ry:10;
 
-    subgraph Frontend["Frontend: React + Vite"]
-        WebApp[🌐 M.E.R.I.D.I.A.N. Web App]
-        Web5SDK[⬅️ Web5.js SDK ➡️]
-        Web3Wallet[⬅️ Web3 Wallet ➡️]
+    %% --- USER LAYER ---
+    subgraph User_Layer["👥 User Layer"]
+        DataProvider[👤 Data Provider]:::actor
+        DataBuyer[🧑‍💼 Data Buyer]:::actor
     end
+    class User_Layer section;
 
-    subgraph Backend_Services["Backend Services"]
-        FastAPI[🚀 FastAPI Server]
+    %% --- FRONTEND ---
+    subgraph Frontend["💻 Frontend: React + Vite"]
+        WebApp[🌐 M.E.R.I.D.I.A.N. Web App]:::rounded
+        Web5SDK[⬅️ Web5.js SDK ➡️]:::rounded
+        Web3Wallet[⬅️ Web3 Wallet ➡️]:::rounded
+    end
+    class Frontend section;
+
+    %% --- BACKEND SERVICES ---
+    subgraph Backend_Services["🧩 Backend Services"]
+        FastAPI[🚀 FastAPI Server]:::highlight
+
         subgraph AI_Engine["🤖 AI Analysis & Processing Engine"]
             direction LR
-            A1["1. Data Processing
-PII Redaction and Structuring"]
-            A2["2. Quality Analysis
-Scoring and Pricing"]
+            A1["1️⃣ Data Processing<br/>PII Redaction & Structuring"]:::ai
+            A2["2️⃣ Quality Analysis<br/>Scoring & Pricing"]:::ai
             A1 --> A2
         end
-        PostgreSQL["🗄️ PostgreSQL DB
-Public Metadata"]
+        PostgreSQL["🗄️ PostgreSQL DB<br/>Public Metadata"]:::highlight
     end
+    class Backend_Services section;
 
-    subgraph Web5_Layer["Web5 Layer (User-Owned)"]
-        ProviderDWN[🏡 Provider's DWN]
-        subgraph ProviderDWN_Data["Provider DWN Data"]
+    %% --- WEB5 LAYER ---
+    subgraph Web5_Layer["🌐 Web5 Layer (User-Owned Data)"]
+        ProviderDWN[🏡 Provider's DWN]:::db
+        subgraph ProviderDWN_Data["📂 Provider DWN Data"]
             direction LR
-            RawData["📄 Raw Data
-Private"]
-            ProcessedDataset["📊 Processed Dataset
-Private, For Sale"]
+            RawData["📄 Raw Data<br/>(Private)"]:::db
+            ProcessedDataset["📊 Processed Dataset<br/>(Private, For Sale)"]:::db
         end
     end
+    class Web5_Layer section;
 
-    subgraph Web3_Layer["Web3 Layer (Creditcoin Blockchain)"]
-        Blockchain["⛓️ Creditcoin Network"]
-        DataLicenseContract["📜 Data License Contract"]
-        LicenseNFT["💎 License NFT"]
+    %% --- WEB3 LAYER ---
+    subgraph Web3_Layer["⛓️ Web3 Layer (Creditcoin Blockchain)"]
+        Blockchain["💠 Creditcoin Network"]:::chain
+        DataLicenseContract["📜 Data License Contract"]:::chain
+        LicenseNFT["💎 License NFT"]:::chain
     end
+    class Web3_Layer section;
 
-    %% --- Data Provider Flow ---
-    DataProvider -- "Uses" --> WebApp
-    WebApp -- "1. Connects" --> Web5SDK --> ProviderDWN
+    %% --- DATA PROVIDER FLOW ---
+    DataProvider -->|"Uses"| WebApp
+    WebApp -->|"1️⃣ Connects"| Web5SDK --> ProviderDWN
+    WebApp -->|"2️⃣ Uploads Raw Data to"| RawData
+    WebApp -->|"3️⃣ Grants Temp Access to AI"| FastAPI
+    FastAPI -->|"Orchestrates"| AI_Engine
+    AI_Engine -->|"Reads"| RawData
+    A1 -->|"Creates"| ProcessedDataset
+    A2 -->|"Returns Score & Price"| FastAPI
+    FastAPI -->|"Stores Listing"| PostgreSQL
+    WebApp -->|"6️⃣ Mints License via"| Web3Wallet --> DataLicenseContract
+    DataLicenseContract -->|"on"| Blockchain
 
-    WebApp -- "2. Uploads Raw Data to" --> RawData
-    WebApp -- "3. Grants Temp Access to AI" --> FastAPI
-    FastAPI -- "Orchestrates" --> AI_Engine
-    
-    AI_Engine -- "Reads" --> RawData
-    AI_Engine -- "4. Processes and Anonymizes" --> A1
-    A1 -- "Creates" --> ProcessedDataset
-    
-    AI_Engine -- "5. Analyzes for Quality" --> A2
-    A2 -- "Returns Score and Price" --> FastAPI
-    FastAPI -- "Stores Listing" --> PostgreSQL
+    %% --- DATA BUYER FLOW ---
+    DataBuyer -->|"Uses"| WebApp
+    WebApp -->|"7️⃣ Browses Marketplace"| FastAPI
+    WebApp -->|"8️⃣ Purchases License via"| Web3Wallet --> DataLicenseContract
+    DataLicenseContract -->|"Mints"| LicenseNFT --> DataBuyer
 
-    WebApp -- "6. Mints License via" --> Web3Wallet --> DataLicenseContract
-    DataLicenseContract -- "on" --> Blockchain
+    %% --- DATA ACCESS FLOW ---
+    WebApp -->|"9️⃣ Buyer Requests Access"| ProcessedDataset
+    ProcessedDataset -->|"🔟 DWN Verifies on"| Blockchain
+    Blockchain -->|"Confirms Buyer Owns"| LicenseNFT
+    ProcessedDataset -->|"1️⃣1️⃣ Grants Read Access"| WebApp
 
-    %% --- Data Buyer Flow ---
-    DataBuyer -- "Uses" --> WebApp
-    WebApp -- "7. Browses Marketplace from" --> FastAPI
-    WebApp -- "8. Purchases License via" --> Web3Wallet --> DataLicenseContract
-    DataLicenseContract -- "Mints" --> LicenseNFT --> DataBuyer
+    %% --- EXTRA STYLING ---
+    linkStyle default stroke:#555,stroke-width:1.2px,fill:none,opacity:0.8;
 
-    %% --- Data Access Flow ---
-    WebApp -- "9. Buyer Requests Access" --> ProcessedDataset
-    ProcessedDataset -- "10. DWN Verifies on" --> Blockchain
-    Blockchain -- "Confirms Buyer Owns" --> LicenseNFT
-    ProcessedDataset -- "11. Grants Read Access" --> WebApp
-
-    %% --- Styling ---
-    style ProviderDWN fill:#e6fffa,stroke:#38a169
-    style Blockchain fill:#f0e6ff,stroke:#805ad5
-    style FastAPI fill:#fefcbf,stroke:#d69e2e
-    style AI_Engine fill:#fff0e6,stroke:#dd6b20
 ```
 
 </div>
