@@ -165,23 +165,90 @@ Sourcing from underrepresented communities creates **fairer, more effective AI**
 
 ## ⚙️ How It Works (Architecture)
 
+As an MVP, we've designed a robust and scalable architecture that showcases the core functionality of the M.E.R.I.D.I.A.N. platform. This diagram illustrates the key components and workflows, from data provider onboarding to data buyer access.
+
 <div align="center">
 
 ```mermaid
-graph TB
-    A[👤 User with DID] -->|Connects| B[🗄️ Personal DWN<br/>User's Data Storage]
-    B -->|Grants Temporary<br/>Read Access| C[🤖 M.E.R.I.D.I.A.N. AI<br/>Analytics Engine]
-    C -->|Analyzes & Prices| D[💎 Data NFT Minting<br/>on Creditcoin]
-    D -->|Listed on| E[🏪 Marketplace]
-    E -->|Purchased by| F[👥 Data Buyer]
-    F -->|NFT Grants Access| B
+graph TD
+    subgraph User_Layer["User Layer"]
+        DataProvider[👤 Data Provider]
+        DataBuyer[👥 Data Buyer]
+    end
+
+    subgraph Frontend["Frontend: React + Vite"]
+        WebApp[🌐 M.E.R.I.D.I.A.N. Web App]
+        Web5SDK[⬅️ Web5.js SDK ➡️]
+        Web3Wallet[⬅️ Web3 Wallet ➡️]
+    end
+
+    subgraph Backend_Services["Backend Services"]
+        FastAPI[🚀 FastAPI Server]
+        subgraph AI_Engine["🤖 AI Analysis & Processing Engine"]
+            direction LR
+            A1["1. Data Processing
+PII Redaction and Structuring"]
+            A2["2. Quality Analysis
+Scoring and Pricing"]
+            A1 --> A2
+        end
+        PostgreSQL["🗄️ PostgreSQL DB
+Public Metadata"]
+    end
+
+    subgraph Web5_Layer["Web5 Layer (User-Owned)"]
+        ProviderDWN[🏡 Provider's DWN]
+        subgraph ProviderDWN_Data["Provider DWN Data"]
+            direction LR
+            RawData["📄 Raw Data
+Private"]
+            ProcessedDataset["📊 Processed Dataset
+Private, For Sale"]
+        end
+    end
+
+    subgraph Web3_Layer["Web3 Layer (Creditcoin Blockchain)"]
+        Blockchain["⛓️ Creditcoin Network"]
+        DataLicenseContract["📜 Data License Contract"]
+        LicenseNFT["💎 License NFT"]
+    end
+
+    %% --- Data Provider Flow ---
+    DataProvider -- "Uses" --> WebApp
+    WebApp -- "1. Connects" --> Web5SDK --> ProviderDWN
+
+    WebApp -- "2. Uploads Raw Data to" --> RawData
+    WebApp -- "3. Grants Temp Access to AI" --> FastAPI
+    FastAPI -- "Orchestrates" --> AI_Engine
     
-    style A fill:#667eea,stroke:#333,stroke-width:2px,color:#fff
-    style B fill:#10b981,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#f59e0b,stroke:#333,stroke-width:2px,color:#fff
-    style D fill:#ec4899,stroke:#333,stroke-width:2px,color:#fff
-    style E fill:#8b5cf6,stroke:#333,stroke-width:2px,color:#fff
-    style F fill:#06b6d4,stroke:#333,stroke-width:2px,color:#fff
+    AI_Engine -- "Reads" --> RawData
+    AI_Engine -- "4. Processes and Anonymizes" --> A1
+    A1 -- "Creates" --> ProcessedDataset
+    
+    AI_Engine -- "5. Analyzes for Quality" --> A2
+    A2 -- "Returns Score and Price" --> FastAPI
+    FastAPI -- "Stores Listing" --> PostgreSQL
+
+    WebApp -- "6. Mints License via" --> Web3Wallet --> DataLicenseContract
+    DataLicenseContract -- "on" --> Blockchain
+
+    %% --- Data Buyer Flow ---
+    DataBuyer -- "Uses" --> WebApp
+    WebApp -- "7. Browses Marketplace from" --> FastAPI
+    WebApp -- "8. Purchases License via" --> Web3Wallet --> DataLicenseContract
+    DataLicenseContract -- "Mints" --> LicenseNFT --> DataBuyer
+
+    %% --- Data Access Flow ---
+    WebApp -- "9. Buyer Requests Access" --> ProcessedDataset
+    ProcessedDataset -- "10. DWN Verifies on" --> Blockchain
+    Blockchain -- "Confirms Buyer Owns" --> LicenseNFT
+    ProcessedDataset -- "11. Grants Read Access" --> WebApp
+
+    %% --- Styling ---
+    style ProviderDWN fill:#e6fffa,stroke:#38a169
+    style Blockchain fill:#f0e6ff,stroke:#805ad5
+    style FastAPI fill:#fefcbf,stroke:#d69e2e
+    style AI_Engine fill:#fff0e6,stroke:#dd6b20
 ```
 
 </div>
