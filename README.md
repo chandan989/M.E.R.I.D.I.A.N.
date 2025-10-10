@@ -762,46 +762,6 @@ We welcome contributions from the community! Whether you're a developer, designe
 
 ---
 
-## 👥 Our Team
-
-<div align="center">
-
-<table>
-<tr>
-<td align="center" width="25%">
-<img src="https://via.placeholder.com/150/667eea/ffffff?text=👨‍💻" width="100px;" alt=""/>
-<br />
-<sub><b>Team Member 1</b></sub>
-<br />
-<sub>Blockchain Engineer</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://via.placeholder.com/150/f59e0b/ffffff?text=👩‍💻" width="100px;" alt=""/>
-<br />
-<sub><b>Team Member 2</b></sub>
-<br />
-<sub>Full Stack Developer</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://via.placeholder.com/150/10b981/ffffff?text=👨‍🔬" width="100px;" alt=""/>
-<br />
-<sub><b>Team Member 3</b></sub>
-<br />
-<sub>AI/ML Engineer</sub>
-</td>
-<td align="center" width="25%">
-<img src="https://via.placeholder.com/150/ec4899/ffffff?text=👩‍🎨" width="100px;" alt=""/>
-<br />
-<sub><b>Team Member 4</b></sub>
-<br />
-<sub>UX/UI Designer</sub>
-</td>
-</tr>
-</table>
-
-</div>
-
----
 
 ## 📜 License
 

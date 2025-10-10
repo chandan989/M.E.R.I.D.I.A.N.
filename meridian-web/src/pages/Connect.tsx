@@ -25,6 +25,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { web5Service } from "@/services/web5";
+import { web3Service } from "@/services/web3";
+import { Web5Error } from "@/services/web5/types";
+import { Web3Error } from "@/services/web3/types";
 
 const ConnectPageNavigation = () => {
   return (
@@ -59,6 +63,7 @@ const Connect = () => {
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState<"provider" | "buyer" | null>(null);
   const [walletId, setWalletId] = useState<string | null>(null);
+  const [web3Address, setWeb3Address] = useState<string | null>(null);
   const [authAction, setAuthAction] = useState<"login" | "register">("register");
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
@@ -71,52 +76,153 @@ const Connect = () => {
 
   const resetAuthStates = () => {
     setWalletId(null);
+    setWeb3Address(null);
     setUserType(null);
     setStep(1);
     setUsername("");
     setLoading(false);
   };
 
-  const handleConnectWallet = (action: "login" | "register") => {
+  const handleConnectWeb5 = async (action: "login" | "register") => {
     setLoading(true);
-    setTimeout(() => {
-      const simulatedId = `did:web5:${Date.now()}`;
-      setWalletId(simulatedId);
-      setDid(simulatedId);
-      setLoading(false);
-      toast.success("Web5 wallet connected successfully!");
+    try {
+      console.log('Starting Web5 connection...', { action });
+      
+      // For registration, create a new DID
+      // For login, connect to existing DID
+      let newDid: string;
+      
+      if (action === 'register') {
+        console.log('Creating new Web5 wallet...');
+        // Create new Web5 wallet (DID + DWN)
+        newDid = await web5Service.createDID();
+        console.log('Web5 wallet created:', newDid);
+        
+        // Check if mock mode was used
+        if (web5Service.isMockMode()) {
+          toast.warning("Development Mode: Using local storage (DHT network unavailable)", {
+            duration: 5000,
+          });
+        } else {
+          toast.success("Web5 wallet created successfully!");
+        }
+      } else {
+        console.log('Connecting to existing Web5 wallet...');
+        // Connect to existing Web5 wallet
+        const result = await web5Service.connect();
+        newDid = result.did;
+        console.log('Web5 wallet connected:', newDid);
+        toast.success("Web5 wallet connected successfully!");
+      }
+      
+      setWalletId(newDid);
+      setDid(newDid);
+      
       if (action === 'register') {
         setStep(2);
       }
-    }, 2000);
+    } catch (error: any) {
+      console.error('Failed to connect Web5:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        code: error?.code,
+        stack: error?.stack
+      });
+      
+      if (error instanceof Web5Error) {
+        // Show the detailed error message
+        if (error.code === 'NETWORK_ERROR') {
+          toast.error(error.message, {
+            duration: 8000, // Show longer for network errors
+          });
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        const errorMessage = error?.message || "Failed to create Web5 wallet. Please try again.";
+        toast.error(errorMessage);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRegister = () => {
+  const handleConnectWeb3 = async () => {
+    setLoading(true);
+    try {
+      const { address } = await web3Service.connect();
+      
+      setWeb3Address(address);
+      toast.success("Web3 wallet connected successfully!");
+      
+      return true;
+    } catch (error) {
+      console.error('Failed to connect Web3:', error);
+      
+      if (error instanceof Web3Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to connect Web3 wallet. Please try again.");
+      }
+      
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async () => {
     if (!userType) {
       toast.error("Please select your user type");
       return;
     }
+
+    if (!web3Address) {
+      toast.error("Please connect your Web3 wallet first");
+      return;
+    }
+
     setLoading(true);
-    setGlobalUserType(userType);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Set user type in global context
+      setGlobalUserType(userType);
+      
       toast.success(`Registration complete! Welcome, ${username}!`);
       navigate(userType === "provider" ? "/provider-dashboard" : "/buyer-dashboard");
-    }, 1500);
+    } catch (error) {
+      console.error('Registration failed:', error);
+      toast.error("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
   
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!userType) {
       toast.error("Please select your role to login");
       return;
     }
+
     setLoading(true);
-    setGlobalUserType(userType);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Connect Web3 wallet for login
+      const web3Connected = await handleConnectWeb3();
+      
+      if (!web3Connected) {
+        return;
+      }
+
+      // Set user type in global context
+      setGlobalUserType(userType);
+      
       toast.success("Login successful! Welcome back.");
       navigate(userType === "provider" ? "/provider-dashboard" : "/buyer-dashboard");
-    }, 1000);
+    } catch (error) {
+      console.error('Login failed:', error);
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderLogin = () => (
@@ -137,11 +243,11 @@ const Connect = () => {
              <Button
                 size="lg"
                 className="w-full h-14 text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30"
-                onClick={() => handleConnectWallet('login')}
+                onClick={() => handleConnectWeb5('login')}
                 disabled={loading}
               >
                 {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <Wallet className="mr-2 h-6 w-6" />}
-                {loading ? 'Connecting...' : 'Connect Web5 Wallet'}
+                {loading ? 'Connecting...' : 'Access Your Web5 Wallet'}
               </Button>
           ) : (
             <>
@@ -179,9 +285,9 @@ const Connect = () => {
           <div>
             <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              {step === 1 && "Step 1: Connect your secure Web5 wallet."}
+              {step === 1 && "Step 1: Create your secure Web5 identity (DID + DWN)."}
               {step === 2 && "Step 2: Choose a unique username for your profile."}
-              {step === 3 && "Step 3: Choose how you'll participate in the network."}
+              {step === 3 && "Step 3: Choose your role and connect Web3 wallet."}
             </p>
           </div>
           <TooltipProvider>
@@ -228,15 +334,30 @@ const Connect = () => {
       </CardHeader>
       <CardContent className="space-y-6">
         {step === 1 && (
-          <Button
-            size="lg"
-            className="w-full h-14 text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30"
-            onClick={() => handleConnectWallet('register')}
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <Wallet className="mr-2 h-6 w-6" />}
-            {loading ? 'Connecting...' : 'Connect Web5 Wallet'}
-          </Button>
+          <>
+            <div className="rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 p-4 space-y-2">
+              <div className="flex items-start gap-3">
+                <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">
+                    Your wallet will be created automatically
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    No external wallet needed! We'll create a secure Web5 identity (DID) and personal data storage (DWN) for you in your browser.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <Button
+              size="lg"
+              className="w-full h-14 text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30"
+              onClick={() => handleConnectWeb5('register')}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <Wallet className="mr-2 h-6 w-6" />}
+              {loading ? 'Creating Your Wallet...' : 'Create Web5 Wallet'}
+            </Button>
+          </>
         )}
 
         {step === 2 && (
@@ -278,25 +399,54 @@ const Connect = () => {
                 {renderUserTypeSelector("buyer")}
               </div>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-[#FD4102]/5 via-transparent to-transparent p-4 border space-y-2">
-                <div>
-                    <p className="text-xs font-semibold text-gray-500">Your DID:</p>
-                    <code className="text-xs text-gray-600 break-all">{walletId}</code>
+            
+            {!web3Address ? (
+              <div className="space-y-4">
+                <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+                  <p className="text-sm text-blue-800 font-medium">
+                    Connect your Web3 wallet to complete registration
+                  </p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    This wallet will be used for blockchain transactions and NFT operations
+                  </p>
                 </div>
-                <div>
+                <Button
+                  size="lg"
+                  className="w-full h-14 text-base font-bold"
+                  onClick={handleConnectWeb3}
+                  disabled={loading}
+                >
+                  {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <Wallet className="mr-2 h-6 w-6" />}
+                  {loading ? 'Connecting...' : 'Connect Web3 Wallet'}
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="rounded-2xl bg-gradient-to-br from-[#FD4102]/5 via-transparent to-transparent p-4 border space-y-2">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500">Your DID (Web5):</p>
+                    <code className="text-xs text-gray-600 break-all">{walletId}</code>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500">Your Wallet (Web3):</p>
+                    <code className="text-xs text-gray-600 break-all">{web3Address}</code>
+                  </div>
+                  <div>
                     <p className="text-xs font-semibold text-gray-500">Your Username:</p>
                     <code className="text-sm text-gray-800 font-bold">{username}</code>
+                  </div>
                 </div>
-            </div>
-            <Button
-              size="lg"
-              className="w-full h-14 text-base font-bold"
-              onClick={handleRegister}
-              disabled={loading || !userType}
-            >
-              {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <UserPlus className="mr-2 h-6 w-6" />}
-              Complete Registration
-            </Button>
+                <Button
+                  size="lg"
+                  className="w-full h-14 text-base font-bold"
+                  onClick={handleRegister}
+                  disabled={loading || !userType}
+                >
+                  {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <UserPlus className="mr-2 h-6 w-6" />}
+                  Complete Registration
+                </Button>
+              </>
+            )}
           </>
         )}
         <div className="text-center pt-2">
