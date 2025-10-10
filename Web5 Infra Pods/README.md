@@ -11,15 +11,15 @@ Web5 provides a new layer of identity and data storage for the web. It allows us
 ```mermaid
 graph TD
     subgraph "Web5: The Decentralized Web Platform"
-        A[Decentralized Identifiers <br> (DIDs)]
-        B[Decentralized Web Nodes <br> (DWNs)]
-        C[Self-Sovereign Identity]
-        D[Decentralized Data Storage]
+        A["Decentralized Identifiers <br> (DIDs)"]
+        B["Decentralized Web Nodes <br> (DWNs)"]
+        C["Self-Sovereign Identity"]
+        D["Decentralized Data Storage"]
     end
 
     subgraph "Traditional Web (Web2)"
-        E[Centralized Identity Providers <br> (e.g., Google, Facebook)]
-        F[Centralized Data Silos]
+        E["Centralized Identity Providers <br> (e.g., Google, Facebook)"]
+        F["Centralized Data Silos"]
     end
 
     C --> A
@@ -68,10 +68,10 @@ Here is a simplified diagram of how the components work together in the MERIDIAN
 ```mermaid
 graph TD
     subgraph "MERIDIAN Application Flow"
-        App[MERIDIAN App <br> (User's Device)]
-        DID_DHT[DID-DHT <br> (Our Infra)]
-        DID_Doc[DID Document <br> (on DHT)]
-        DWN[DWN Server <br> (Our Infra)]
+        App["MERIDIAN App <br> (User's Device)"]
+        DID_DHT["DID-DHT <br> (Our Infra)"]
+        DID_Doc["DID Document <br> (on DHT)"]
+        DWN["DWN Server <br> (Our Infra)"]
     end
 
     App -- "1. Looks up DID" --> DID_DHT
