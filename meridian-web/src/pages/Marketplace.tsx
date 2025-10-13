@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -15,10 +15,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Star, Database, Eye, Coins, Grid3x3, List, Repeat, ShoppingCart } from "lucide-react";
+import { web5Service } from "@/services/web5/Web5Service";
 
 const Marketplace = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [uploadedDatasets, setUploadedDatasets] = useState<any[]>([]);
 
   const categories = [
     "Healthcare",
@@ -30,7 +32,22 @@ const Marketplace = () => {
     "Custom",
   ];
 
-  const datasets = [
+  // Load uploaded datasets from Web5
+  useEffect(() => {
+    const loadDatasets = async () => {
+      try {
+        const datasets = await web5Service.queryDWN({ 
+          schema: 'https://meridian.io/schemas/dataset' 
+        });
+        setUploadedDatasets(datasets);
+      } catch (error) {
+        console.error('Failed to load uploaded datasets:', error);
+      }
+    };
+    loadDatasets();
+  }, []);
+
+  const mockDatasets = [
     {
       id: 1,
       title: "Global Healthcare Patient Data",
@@ -105,6 +122,22 @@ const Marketplace = () => {
       featured: false,
     },
   ];
+
+  // Convert uploaded datasets to marketplace format and combine with mock data
+  const convertedUploadedDatasets = uploadedDatasets.map((ds, index) => ({
+    id: `uploaded-${index}`,
+    title: ds.title || 'Uploaded Dataset',
+    category: ds.category || 'Custom',
+    price: ds.price || 100,
+    quality: 4.5,
+    views: 0,
+    sales: 0,
+    description: ds.description || 'User uploaded dataset',
+    provider: 'Community Provider',
+    featured: true,
+  }));
+
+  const datasets = [...convertedUploadedDatasets, ...mockDatasets];
 
   const DatasetCard = ({ dataset, isList = false }) => (
     <Card

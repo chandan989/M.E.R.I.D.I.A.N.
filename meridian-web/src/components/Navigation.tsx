@@ -1,8 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Menu, X, Wallet, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useOne } from "../contexts/OneContext";
+import { useWeb3 } from "@/hooks/useWeb3";
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,6 +12,7 @@ const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { did, setDid, userType, setUserType } = useOne();
+  const { isConnected: web3Connected, shortAddress, connect: connectWeb3, disconnect: disconnectWeb3 } = useWeb3();
 
   const isActive = (path: string) => {
     if (path.includes('dashboard')) {
@@ -61,6 +64,24 @@ const Navigation = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
+            {/* MetaMask Wallet */}
+            {web3Connected ? (
+              <Badge variant="secondary" className="hidden md:inline-flex">
+                {shortAddress}
+              </Badge>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden md:inline-flex text-white border-white/20 hover:bg-white/10"
+                onClick={connectWeb3}
+              >
+                <Wallet className="mr-2 h-4 w-4" />
+                MetaMask
+              </Button>
+            )}
+
+            {/* Web5 Identity */}
             {did ? (
               <div className="relative">
                 <Button
@@ -69,7 +90,7 @@ const Navigation = () => {
                   onClick={() => setDropdownOpen(!isDropdownOpen)}
                 >
                   <Wallet className="mr-2 h-4 w-4" />
-                  <span className="truncate">{did}</span>
+                  Web5
                 </Button>
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md bg-white shadow-lg">
@@ -87,8 +108,7 @@ const Navigation = () => {
             ) : (
               <Link to="/connect">
                 <Button variant="secondary" className="hidden md:inline-flex">
-                  <Wallet className="mr-2 h-4 w-4" />
-                  Connect Wallet
+                  Connect Web5
                 </Button>
               </Link>
             )}

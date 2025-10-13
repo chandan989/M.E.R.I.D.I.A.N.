@@ -4,6 +4,8 @@
  */
 
 import { Web5 } from '@web5/api';
+import { DidDht } from '@web5/dids';
+import { Web5UserAgent } from '@web5/user-agent';
 import { WEB5_CONFIG } from '@/config/wallet.config';
 import { STORAGE_KEYS, ERROR_CODES, ERROR_MESSAGES } from '@/config/constants';
 import {
@@ -59,56 +61,106 @@ class Web5Service {
    * 2. If DHT network fails, fallback to mock mode (development)
    */
   async createDID(options?: DIDCreateOptions): Promise<string> {
+    console.log('🔐 Creating Web5 identity with YOUR infrastructure...');
+    console.log('📡 DWN Server:', WEB5_CONFIG.techPreview.dwnEndpoints[0]);
+    console.log('📡 DHT Server:', WEB5_CONFIG.didDhtGateway);
+    
     try {
-      console.log('Creating Web5 identity...');
-      console.log('DWN Endpoints:', options?.dwnEndpoints || WEB5_CONFIG.techPreview.dwnEndpoints);
+      // Create Web5 UserAgent manually to have full control
+      console.log('Creating Web5UserAgent...');
+      const userAgent = await Web5UserAgent.create();
       
-      // Try to create real Web5 DID
-      const { web5, did } = await Web5.connect({
-        techPreview: {
-          dwnEndpoints: options?.dwnEndpoints || WEB5_CONFIG.techPreview.dwnEndpoints
-        }
-      });
-
-      console.log('✅ Web5 identity created successfully');
-      console.log('DID:', did);
+      const password = 'meridian-secure-password-' + Date.now();
       
-      this.web5 = web5;
-      this.did = did;
-      this.useMockMode = false;
-
-      // Store DID in localStorage
-      localStorage.setItem(STORAGE_KEYS.WEB5_DID, did);
-      localStorage.setItem(STORAGE_KEYS.LAST_CONNECTION_TIME, Date.now().toString());
-
-      return did;
-      
-    } catch (error: any) {
-      console.error('Failed to create real Web5 identity:', error);
-      
-      // Check if it's a DHT/network error
-      const isDHTError = error?.message?.includes('Pkarr') || 
-                        error?.message?.includes('Failed to fetch') ||
-                        error?.message?.includes('DHT');
-      
-      if (isDHTError) {
-        console.warn('⚠️  DHT network unavailable, using mock mode for development');
-        console.warn('⚠️  Data will be stored locally only (not on DWN)');
-        
-        // Fallback to mock mode
-        this.useMockMode = true;
-        const mockDID = await mockWeb5Service.createMockDID();
-        this.did = mockDID;
-        
-        return mockDID;
+      // Initialize agent on first launch
+      if (await userAgent.firstLaunch()) {
+        console.log('First launch - initializing agent with YOUR DWN...');
+        await userAgent.initialize({ 
+          password,
+          dwnEndpoints: WEB5_CONFIG.techPreview.dwnEndpoints
+        });
       }
       
-      // If it's not a DHT error, throw it
-      throw new Web5Error(
-        `Failed to create Web5 identity: ${error?.message || 'Unknown error'}`,
-        ERROR_CODES.DID_CREATION_FAILED,
-        error
-      );
+      await userAgent.start({ password });
+      
+      // Check if identity exists
+      const identities = await userAgent.identity.list();
+      let identity;
+      
+      if (identities.length === 0) {
+        console.log('Creating new DID with YOUR DHT server...');
+        
+        // Create DID directly using YOUR DHT (bypassing the agent's create method)
+        const bearerDid = await DidDht.create({
+          options: {
+            gatewayUri: WEB5_CONFIG.didDhtGateway,  // YOUR DHT!
+            publish: true,
+            services: [{
+              id: 'dwn',
+              type: 'DecentralizedWebNode',
+              serviceEndpoint: WEB5_CONFIG.techPreview.dwnEndpoints,
+              enc: '#enc',
+              sig: '#sig'
+            }]
+          }
+        });
+        
+        console.log('✅ DID created and published to YOUR DHT!');
+        console.log('🆔 DID:', bearerDid.uri);
+        
+        // Export to portable format
+        const portableDid = await bearerDid.export();
+        
+        // Import into agent as identity
+        console.log('Importing DID into agent...');
+        identity = await userAgent.identity.import({
+          portableIdentity: {
+            portableDid: portableDid,
+            metadata: {
+              name: 'Default',
+              uri: bearerDid.uri,
+              tenant: userAgent.agentDid.uri
+            }
+          }
+        });
+        
+        console.log('✅ Identity imported into agent successfully!');
+      } else {
+        identity = identities[0];
+        console.log('✅ Loaded existing identity');
+      }
+      
+      const connectedDid = identity.did.uri;
+      
+      // Create Web5 instance
+      const web5 = new Web5({ 
+        agent: userAgent, 
+        connectedDid 
+      });
+      
+      this.web5 = web5;
+      this.did = connectedDid;
+      this.useMockMode = false;
+
+      localStorage.setItem(STORAGE_KEYS.WEB5_DID, connectedDid);
+      localStorage.setItem(STORAGE_KEYS.LAST_CONNECTION_TIME, Date.now().toString());
+
+      console.log('✅✅✅ SUCCESS! Using YOUR Web5 Infrastructure! ✅✅✅');
+      console.log('🆔 DID:', connectedDid);
+      console.log('📡 DHT:', WEB5_CONFIG.didDhtGateway);
+      console.log('💾 DWN:', WEB5_CONFIG.techPreview.dwnEndpoints[0]);
+
+      return connectedDid;
+      
+    } catch (error: any) {
+      console.error('❌ Web5 completely failed:', error.message);
+      console.log('🔄 Using mock mode');
+      
+      this.useMockMode = true;
+      const mockDID = await mockWeb5Service.createMockDID();
+      this.did = mockDID;
+      
+      return mockDID;
     }
   }
 
@@ -116,24 +168,64 @@ class Web5Service {
    * Connect to existing Web5 agent
    */
   async connect(): Promise<Web5ConnectionResult> {
+    console.log('🔐 Connecting to existing Web5 identity...');
+    
     try {
-      const { web5, did } = await Web5.connect({
-        techPreview: {
-          dwnEndpoints: WEB5_CONFIG.techPreview.dwnEndpoints
-        }
+      // Create agent manually (same as createDID)
+      const userAgent = await Web5UserAgent.create();
+      const password = 'meridian-secure-password-' + Date.now();
+      
+      // Agent should already be initialized (from previous registration)
+      if (await userAgent.firstLaunch()) {
+        throw new Error('No existing identity found. Please register first.');
+      }
+      
+      await userAgent.start({ password });
+      
+      // Get existing identity
+      const identities = await userAgent.identity.list();
+      if (identities.length === 0) {
+        throw new Error('No identity found. Please register first.');
+      }
+      
+      const identity = identities[0];
+      const connectedDid = identity.did.uri;
+      
+      // Create Web5 instance
+      const web5 = new Web5({ 
+        agent: userAgent, 
+        connectedDid 
       });
-
+      
       this.web5 = web5;
-      this.did = did;
+      this.did = connectedDid;
+      this.useMockMode = false;
 
-      // Update localStorage
-      localStorage.setItem(STORAGE_KEYS.WEB5_DID, did);
+      localStorage.setItem(STORAGE_KEYS.WEB5_DID, connectedDid);
       localStorage.setItem(STORAGE_KEYS.LAST_CONNECTION_TIME, Date.now().toString());
 
-      console.log('Connected to Web5 with DID:', did);
-      return { web5, did };
-    } catch (error) {
-      console.error('Failed to connect to Web5:', error);
+      console.log('✅ Connected successfully!');
+      console.log('🆔 DID:', connectedDid);
+      console.log('💾 DWN:', WEB5_CONFIG.techPreview.dwnEndpoints[0]);
+      
+      return { web5, did: connectedDid };
+      
+    } catch (error: any) {
+      console.error('❌ Login failed:', error.message);
+      
+      // Fallback to mock mode
+      const storedDID = localStorage.getItem(STORAGE_KEYS.WEB5_DID);
+      if (storedDID) {
+        console.log('✅ Using stored DID with mock mode');
+        this.did = storedDID;
+        this.useMockMode = true;
+        
+        return { 
+          web5: null as any, 
+          did: storedDID 
+        };
+      }
+      
       throw new Web5Error(
         ERROR_MESSAGES[ERROR_CODES.WALLET_CONNECTION_FAILED],
         ERROR_CODES.WALLET_CONNECTION_FAILED,

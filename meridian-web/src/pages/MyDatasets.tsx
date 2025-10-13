@@ -3,12 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlusCircle, Download, Eye, Edit, Loader2 } from "lucide-react";
 import { useOne } from "../contexts/OneContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { web5Service } from "@/services/web5";
+import SystemStatus from "@/components/SystemStatus";
 
 const MyDatasets = () => {
   const navigate = useNavigate();
   const { did, userType, isLoading } = useOne();
+  const [uploadedDatasets, setUploadedDatasets] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Load uploaded datasets
+  useEffect(() => {
+    if (did) {
+      loadDatasets();
+    }
+  }, [did]);
+  
+  const loadDatasets = async () => {
+    try {
+      const datasets = await web5Service.queryDWN({ 
+        schema: 'https://meridian.io/schemas/dataset' 
+      });
+      setUploadedDatasets(datasets);
+    } catch (error) {
+      console.error('Failed to load datasets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!isLoading && !did) {
@@ -59,6 +83,11 @@ const MyDatasets = () => {
 
   const isProvider = userType === 'provider';
   const datasets = isProvider ? providerDatasets : buyerDatasets;
+  
+  // Combine uploaded datasets with mock data for display
+  const allDatasets = isProvider 
+    ? [...uploadedDatasets, ...datasets] 
+    : datasets;
 
   const StatusBadge = ({ status }: { status: string }) => (
     <span
@@ -122,9 +151,23 @@ const MyDatasets = () => {
           )}
         </div>
 
+        {/* System Status */}
+        <div className="mb-8">
+          <SystemStatus />
+        </div>
+
+        {/* Uploaded Datasets Indicator */}
+        {uploadedDatasets.length > 0 && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-medium">
+              ✅ {uploadedDatasets.length} dataset(s) uploaded to {web5Service.isMockMode() ? 'localStorage' : 'YOUR DWN server'}
+            </p>
+          </div>
+        )}
+
         {/* Datasets Grid */}
         <div className="grid gap-8 md:grid-cols-2">
-          {datasets.map((dataset) => (
+          {allDatasets.map((dataset) => (
             <Card
               key={dataset.id}
               className="border-2 border-transparent shadow-lg shadow-[#FD4102]/5 hover:border-[#FD4102]/50 hover:shadow-2xl hover:shadow-[#FD4102]/10 transition-all duration-300 group flex flex-col"

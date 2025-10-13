@@ -18,6 +18,7 @@ import { Chart } from "@/components/charts";
 import { useOne } from "@/contexts/OneContext";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import SystemStatus from "@/components/SystemStatus";
 
 const ProviderDashboard = () => {
   const navigate = useNavigate();
@@ -226,6 +227,11 @@ const ProviderDashboard = () => {
               View Profile
             </Button>
           </Link>
+        </div>
+
+        {/* System Status */}
+        <div className="mb-8 max-w-2xl mx-auto">
+          <SystemStatus />
         </div>
 
         {/* Stats Grid */}

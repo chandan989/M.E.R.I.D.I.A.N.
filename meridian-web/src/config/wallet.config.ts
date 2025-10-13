@@ -4,12 +4,12 @@
  */
 
 // Creditcoin Network Configuration
-export const CREDITCOIN_MAINNET = 102031;
-export const CREDITCOIN_TESTNET = 102032;
+export const CREDITCOIN_MAINNET = 102030;
+export const CREDITCOIN_TESTNET = 102031; // Actual Creditcoin testnet chain ID
 
 // Default network (use testnet for development)
-export const DEFAULT_CHAIN_ID = import.meta.env.VITE_CREDITCOIN_CHAIN_ID 
-  ? parseInt(import.meta.env.VITE_CREDITCOIN_CHAIN_ID) 
+export const DEFAULT_CHAIN_ID = import.meta.env.VITE_CHAIN_ID 
+  ? parseInt(import.meta.env.VITE_CHAIN_ID) 
   : CREDITCOIN_TESTNET;
 
 // Network Configurations
@@ -38,24 +38,27 @@ export const NETWORK_CONFIGS = {
       decimals: 18
     },
     rpcUrls: [
-      import.meta.env.VITE_CREDITCOIN_RPC_URL || 'https://rpc.testnet.creditcoin.network'
+      import.meta.env.VITE_RPC_URL || 'https://rpc.cc3-testnet.creditcoin.network'
     ],
     blockExplorerUrls: [
-      import.meta.env.VITE_BLOCK_EXPLORER_URL || 'https://testnet-explorer.creditcoin.network'
+      import.meta.env.VITE_BLOCK_EXPLORER || 'https://explorer.cc3-testnet.creditcoin.network'
     ]
   }
 };
 
-// Web5 Configuration
+// Web5 Configuration - Using YOUR deployed infrastructure!
 export const WEB5_CONFIG = {
-  dwnEndpoints: import.meta.env.VITE_WEB5_DWN_ENDPOINTS?.split(',') || [
-    'https://dwn.tbddev.org/beta'
+  // Your deployed DWN server
+  dwnEndpoints: [
+    'https://dwn-server-1023618994627.asia-northeast1.run.app/'
   ],
   techPreview: {
-    dwnEndpoints: import.meta.env.VITE_WEB5_DWN_ENDPOINTS?.split(',') || [
-      'https://dwn.tbddev.org/beta'
+    dwnEndpoints: [
+      'https://dwn-server-1023618994627.asia-northeast1.run.app/'
     ]
   },
+  // Your deployed DID-DHT server
+  didDhtGateway: import.meta.env.VITE_DID_DHT_GATEWAY || 'http://136.115.91.108:8305',
   // Sync interval in milliseconds (5 minutes)
   syncInterval: 5 * 60 * 1000
 };

@@ -24,12 +24,22 @@ import {
   Coins,
 } from "lucide-react";
 import { useOne } from "@/contexts/OneContext";
+import { useWeb3 } from "@/hooks/useWeb3";
+import { useContracts } from "@/hooks/useContracts";
+import { web5Service } from "@/services/web5";
 
 const Upload = () => {
   const navigate = useNavigate();
   const { did, userType, isLoading } = useOne();
+  const { isConnected: web3Connected, connect: connectWallet } = useWeb3();
+  const { listDataset, isLoading: contractLoading } = useContracts();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [datasetId] = useState(`dataset-${Date.now()}`);
+  const [price, setPrice] = useState("1.0");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [datasetTitle, setDatasetTitle] = useState("");
+  const [datasetCategory, setDatasetCategory] = useState("");
 
   useEffect(() => {
     if (!isLoading) {
@@ -43,13 +53,55 @@ const Upload = () => {
     }
   }, [did, userType, isLoading, navigate]);
 
-  const handleUploadFile = () => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      toast.success(`File selected: ${file.name}`);
+    }
+  };
+
+  const handleUploadFile = async () => {
+    if (!selectedFile) {
+      toast.error("Please select a file first");
+      return;
+    }
+    
     setLoading(true);
-    setTimeout(() => {
+    
+    try {
+      // Read file data
+      const fileData = await selectedFile.text();
+      
+      // Actually write to DWN (or localStorage in mock mode)
+      const recordId = await web5Service.writeToDWN(
+        {
+          datasetId: datasetId,
+          title: datasetTitle || selectedFile.name,
+          category: datasetCategory || "Other",
+          fileName: selectedFile.name,
+          fileSize: selectedFile.size,
+          data: fileData,
+          uploadedAt: new Date().toISOString()
+        },
+        'https://meridian.io/schemas/dataset'
+      );
+      
+      console.log('✅ Data written to DWN/localStorage:', recordId);
+      
+      toast.success(
+        web5Service.isMockMode() 
+          ? "File stored locally (mock mode)" 
+          : "File uploaded to YOUR DWN!"
+      );
+      
+      setStep(3);
+    } catch (error: any) {
+      console.error('Upload failed:', error);
+      toast.error("Upload failed: " + error.message);
+    } finally {
       setLoading(false);
-      setStep(2);
-      toast.success("File uploaded to your DWN successfully!");
-    }, 2000);
+    }
   };
 
   const handleAnalyze = () => {
@@ -61,13 +113,23 @@ const Upload = () => {
     }, 3000);
   };
 
-  const handleMint = () => {
+  const handleMint = async () => {
+    if (!web3Connected) {
+      toast.error("Please connect your MetaMask wallet first");
+      await connectWallet();
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success("NFT minted successfully! Your dataset is now listed.");
+    try {
+      await listDataset(datasetId, price);
+      toast.success("Dataset listed on blockchain marketplace!");
       navigate("/my-datasets");
-    }, 2500);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (isLoading || !did || userType !== 'provider') {
@@ -128,6 +190,8 @@ const Upload = () => {
                     id="title"
                     placeholder="e.g., Global Healthcare Patient Data"
                     className="mt-1.5"
+                    value={datasetTitle}
+                    onChange={(e) => setDatasetTitle(e.target.value)}
                   />
                 </div>
 
@@ -187,14 +251,23 @@ const Upload = () => {
                 <div className="rounded-lg border-2 border-dashed border-border p-12 text-center hover:border-primary transition-colors">
                   <UploadIcon className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                   <h3 className="mb-2 text-lg font-semibold">
-                    Drag and drop your file here
+                    {selectedFile ? selectedFile.name : "Drag and drop your file here"}
                   </h3>
                   <p className="mb-4 text-sm text-muted-foreground">
-                    or click to browse
+                    {selectedFile ? `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB` : "or click to browse"}
                   </p>
-                  <Button variant="outline">
-                    <FileUp className="mr-2 h-4 w-4" />
-                    Choose File
+                  <input
+                    type="file"
+                    id="file-upload"
+                    className="hidden"
+                    onChange={handleFileSelect}
+                    accept=".csv,.json,.xml,.xlsx,.sql,.parquet"
+                  />
+                  <Button variant="outline" asChild>
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <FileUp className="mr-2 h-4 w-4" />
+                      {selectedFile ? "Change File" : "Choose File"}
+                    </label>
                   </Button>
                 </div>
 
@@ -237,7 +310,7 @@ const Upload = () => {
                     size="lg"
                     className="flex-1"
                     onClick={handleUploadFile}
-                    disabled={loading}
+                    disabled={loading || !selectedFile}
                   >
                     {loading ? (
                       <>
@@ -325,7 +398,8 @@ const Upload = () => {
                       <Input
                         id="custom-price"
                         type="number"
-                        defaultValue="250"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
                         className="mt-1.5"
                       />
                     </div>
@@ -366,9 +440,19 @@ const Upload = () => {
           {step === 4 && (
             <Card className="animate-fade-in">
               <CardHeader>
-                <CardTitle>Mint NFT & List</CardTitle>
+                <CardTitle>Mint NFT & List on Blockchain</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
+                {!web3Connected && (
+                  <div className="rounded-lg bg-orange-50 border border-orange-200 p-4">
+                    <p className="text-sm font-medium text-orange-800 mb-2">
+                      ⚠️ MetaMask wallet required to list on blockchain
+                    </p>
+                    <Button onClick={connectWallet} size="sm" variant="outline">
+                      Connect MetaMask
+                    </Button>
+                  </div>
+                )}
                 <div className="rounded-lg bg-primary/5 p-6">
                   <h3 className="mb-4 text-lg font-semibold">NFT Preview</h3>
                   <div className="space-y-3 text-sm">
@@ -426,15 +510,15 @@ const Upload = () => {
                     size="lg"
                     className="flex-1"
                     onClick={handleMint}
-                    disabled={loading}
+                    disabled={loading || !web3Connected}
                   >
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Minting...
+                        Listing on Blockchain...
                       </>
                     ) : (
-                      "Mint NFT & List"
+                      "List on Blockchain Marketplace"
                     )}
                   </Button>
                 </div>

@@ -16,15 +16,21 @@ import {
   Coins,
   CheckCircle2,
   Loader2,
+  Wallet,
 } from "lucide-react";
 import { useOne } from "@/contexts/OneContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useWeb3 } from "@/hooks/useWeb3";
+import { useContracts } from "@/hooks/useContracts";
 
 const DatasetDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { did, userType, isLoading } = useOne();
+  const { isConnected: web3Connected, connect: connectWallet } = useWeb3();
+  const { buyLicense, isLoading: contractLoading } = useContracts();
+  const [purchasing, setPurchasing] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !did) {
@@ -104,6 +110,26 @@ const DatasetDetails = () => {
   }
 
   const isOwner = userType === 'provider' && did === dataset.provider.did;
+
+  const handlePurchase = async () => {
+    if (!web3Connected) {
+      toast.error("Please connect MetaMask first");
+      await connectWallet();
+      return;
+    }
+
+    setPurchasing(true);
+    try {
+      const datasetId = `dataset-${id}`;
+      await buyLicense(datasetId);
+      toast.success("License purchased! You now own this dataset.");
+      navigate("/buyer-dashboard");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPurchasing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white text-gray-800 animate-fade-in relative">
@@ -264,8 +290,23 @@ const DatasetDetails = () => {
                     </Link>
                   ) : (
                     <>
-                      <Button size="lg" className="h-12 w-full text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30 hover:shadow-xl hover:shadow-[#FD4102]/40 transition-all duration-300 text-white">
-                        Purchase Now
+                      <Button 
+                        size="lg" 
+                        className="h-12 w-full text-base font-bold bg-gradient-to-r from-[#FD4102] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FD4102] shadow-lg shadow-[#FD4102]/30 hover:shadow-xl hover:shadow-[#FD4102]/40 transition-all duration-300 text-white"
+                        onClick={handlePurchase}
+                        disabled={purchasing || contractLoading}
+                      >
+                        {purchasing ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Purchasing...
+                          </>
+                        ) : (
+                          <>
+                            <Wallet className="mr-2 h-4 w-4" />
+                            Purchase on Blockchain
+                          </>
+                        )}
                       </Button>
                       <Button size="lg" variant="outline" className="w-full h-12 text-base border-[#FD4102]/50 text-[#FD4102] hover:bg-[#FD4102]/10 hover:text-[#FD4102]">
                         Add to Cart
