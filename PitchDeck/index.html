@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>M.E.R.I.D.I.A.N. - Pitch Deck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link rel="icon" type="image/png" href="../meridian-web/public/logo.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', darkMode: true, themeVariables: {
+            'background': '#0a0a0a',
+            'mainBkg': '#1a1a1a',
+            'primaryColor': '#1a1a1a',
+            'primaryTextColor': '#f0f0f0',
+            'lineColor': '#FD4102',
+            'textColor': '#f0f0f0',
+            'fontSize': '22px',
+            'nodeBorder': '#FD4102'
+        }});
+    </script>
+    <style>
+        :root {
+            --primary-color: #FD4102;
+            --secondary-color: #FF6B35;
+            --dark-bg: #0a0a0a;
+            --light-text: #f0f0f0;
+            --dark-text: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            scroll-behavior: smooth;
+            height: 98vh;
+            overflow: hidden;
+        }
+
+        #slides-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
+
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(253, 65, 2, 0.1);
+        }
+
+        .slide-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 50;
+        }
+
+        .slide-nav a {
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .slide-nav a.active {
+            background-color: var(--primary-color);
+            transform: scale(1.5);
+        }
+
+        .slide-nav a .tooltip {
+            position: absolute;
+            top: 50%;
+            right: 150%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+
+        .slide-nav a:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Background Grid */
+        .grid-background {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        /* Background Glow */
+        .glow-background::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50vw;
+            height: 50vh;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            opacity: 0.05;
+            transform: translate(-50%, -50%);
+            filter: blur(100px);
+            z-index: -2;
+        }
+
+    </style>
+</head>
+<body class="bg-dark-bg text-light-text">
+
+    <!-- Slide Navigation -->
+    <nav class="slide-nav">
+        <a href="#slide-1" class="active"><span class="tooltip">Intro</span></a>
+        <a href="#slide-2"><span class="tooltip">Problem</span></a>
+        <a href="#slide-3"><span class="tooltip">Solution</span></a>
+        <a href="#slide-4"><span class="tooltip">How it Works</span></a>
+        <a href="#slide-5"><span class="tooltip">Features</span></a>
+        <a href="#slide-6"><span class="tooltip">Architecture</span></a>
+        <a href="#slide-7"><span class="tooltip">Tech Stack</span></a>
+        <a href="#slide-8"><span class="tooltip">Market</span></a>
+        <a href="#slide-9"><span class="tooltip">Call to Action</span></a>
+    </nav>
+
+    <main id="slides-container">
+    <!-- Slide 1: Title -->
+    <section id="slide-1" class="slide glow-background">
+        <div class="grid-background"></div>
+        <div class="text-center fade-in">
+            <img src="https://raw.githubusercontent.com/chandan989/m.e.r.i.d.i.a.n./dd0d2e5ad86821996628fa4709e0d1742f93b43d/meridian-web/public/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" class="h-24 w-auto mx-auto mb-6">
+            <h1 class="text-6xl md:text-8xl font-black gradient-text">M.E.R.I.D.I.A.N.</h1>
+            <p class="mt-4 text-xl md:text-2xl text-gray-300 tracking-wider">Your Data. Your Rules. Your Profit.</p>
+            <p class="mt-2 text-md text-gray-500">A Decentralized Data Marketplace powered by Web5</p>
+        </div>
+    </section>
+
+    <!-- Slide 2: The Problem -->
+    <section id="slide-2" class="slide">
+        <div class="text-center max-w-4xl mx-auto fade-in">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">The Core Problem</h2>
+            <h3 class="text-4xl md:text-6xl font-black mb-6">Broken Data, Biased AI.</h3>
+            <p class="text-lg text-gray-400 mb-12">The digital world is built on a flawed foundation of data exploitation and algorithmic bias. We're here to change that.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="card p-8 rounded-2xl text-left">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="p-3 bg-primary-color/10 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-color"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect x="2" y="12" width="6" height="8" rx="1"/><path d="M12 4h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4"/><path d="M18 12h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4"/></svg></div>
+                        <h4 class="text-2xl font-bold">The AI Bias Crisis</h4>
+                    </div>
+                    <p class="text-gray-400">Algorithms perpetuate inequality. Underrepresented communities are excluded from AI training data, leading to discriminatory outcomes in healthcare, finance, and justice.</p>
+                </div>
+                <div class="card p-8 rounded-2xl text-left">
+                     <div class="flex items-center gap-4 mb-4">
+                        <div class="p-3 bg-primary-color/10 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-color"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg></div>
+                        <h4 class="text-2xl font-bold">Your Data, Their Profits</h4>
+                    </div>
+                    <p class="text-gray-400">Tech giants profit billions from your data while you get nothing. No control, no compensation, no transparency. You are the product in a multi-billion dollar industry.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: The Solution -->
+    <section id="slide-3" class="slide glow-background">
+        <div class="grid-background"></div>
+        <div class="text-center max-w-4xl mx-auto fade-in">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">The Solution</h2>
+            <h3 class="text-4xl md:text-6xl font-black mb-6">The M.E.R.I.D.I.A.N. Ecosystem</h3>
+            <p class="text-lg text-gray-400 mb-12">A revolutionary decentralized data marketplace that gives users complete sovereignty over their digital identity and data, creating new economic opportunities for all.</p>
+            <div class="card p-8 rounded-2xl">
+                 <p class="font-mono text-gray-400 text-sm mb-2">// Traditional Model</p>
+                 <p class="font-mono text-lg mb-6">You → Platform → AI → <span class="text-red-500">Platform Profits</span></p>
+                 <p class="font-mono text-gray-400 text-sm mb-2">// M.E.R.I.D.I.A.N. Model</p>
+                 <p class="font-mono text-lg">You (DID + DWN) → Your Data → AI (Temp. Access) → Buyer → <span class="gradient-text font-bold">You Get Paid</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: How it Works -->
+    <section id="slide-4" class="slide">
+        <div class="text-center max-w-5xl mx-auto fade-in">
+             <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">How It Works</h2>
+             <h3 class="text-4xl md:text-6xl font-black mb-12">A Four-Step Revolution</h3>
+             <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="relative mb-4">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-primary-color/10 flex items-center justify-center text-4xl font-black gradient-text">01</div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Connect with Web5</h4>
+                    <p class="text-gray-400 text-sm">Create your decentralized identity and personal data vault (DWN) in seconds. True self-sovereignty starts here.</p>
+                </div>
+                 <div class="text-center">
+                    <div class="relative mb-4">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-primary-color/10 flex items-center justify-center text-4xl font-black gradient-text">02</div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Upload Your Data</h4>
+                    <p class="text-gray-400 text-sm">Securely upload datasets to your personal DWN. Your data is encrypted and never leaves your control.</p>
+                </div>
+                 <div class="text-center">
+                    <div class="relative mb-4">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-primary-color/10 flex items-center justify-center text-4xl font-black gradient-text">03</div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">AI Quality Check</h4>
+                    <p class="text-gray-400 text-sm">Grant temporary, revocable access to our AI for quality scoring and fair pricing suggestions, without compromising privacy.</p>
+                </div>
+                 <div class="text-center">
+                    <div class="relative mb-4">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-primary-color/10 flex items-center justify-center text-4xl font-black gradient-text">04</div>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2">Mint & List</h4>
+                    <p class="text-gray-400 text-sm">Transform your data's access rights into a tradable NFT on the blockchain, set your price, and list it on the marketplace.</p>
+                </div>
+             </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Key Features -->
+    <section id="slide-5" class="slide glow-background">
+        <div class="grid-background"></div>
+        <div class="text-center max-w-6xl mx-auto fade-in">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">Core Features</h2>
+            <h3 class="text-4xl md:text-6xl font-black mb-12">A New Paradigm for Data</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card p-6 rounded-2xl text-center">
+                    <div class="p-3 inline-block bg-primary-color/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-color"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg></div>
+                    <h4 class="text-xl font-bold mb-2">Self-Sovereign Identity</h4>
+                    <p class="text-gray-400 text-sm">Complete control over your data with Web5 DIDs. No intermediaries, no data brokers.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="card p-6 rounded-2xl text-center">
+                     <div class="p-3 inline-block bg-primary-color/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-color"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></div>
+                    <h4 class="text-xl font-bold mb-2">Data-as-NFT</h4>
+                    <p class="text-gray-400 text-sm">Your datasets become tradable NFTs with built-in royalties and fractional ownership.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="card p-6 rounded-2xl text-center">
+                    <div class="p-3 inline-block bg-primary-color/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary-color"><path d="M12 11v5"/><path d="m10.3 6.7.9-2.9C11.4 3.2 11.8 3 12.3 3c.4 0 .8.2 1.1.7l.9 2.9"/><path d="M16.5 10.5c0 2.2-1.8 4-4 4s-4-1.8-4-4"/><path d="M12 21a9 9 0 0 0 9-9c0-4.9-4-9-9-9s-9 4.1-9 9a9 9 0 0 0 9 9z"/></svg></div>
+                    <h4 class="text-xl font-bold mb-2">Privacy-First AI</h4>
+                    <p class="text-gray-400 text-sm">AI analysis with temporary, revocable permissions. Your data never leaves your control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Architecture -->
+    <section id="slide-6" class="slide">
+        <div class="text-center max-w-full w-full mx-auto fade-in" style="padding-left: 4rem; padding-right: 4rem;">
+             <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">Architecture</h2>
+             <h3 class="text-4xl md:text-6xl font-black mb-12">The MERIDIAN Stack</h3>
+             <div class="mermaid bg-transparent text-left" style="width: 100%; transform: scale(1.4); transform-origin: center;">
+graph TD
+    subgraph User_Layer ["👥 User Layer"]
+        DataProvider[👤 Data Provider]
+        DataBuyer[🧑‍💼 Data Buyer]
+    end
+
+    subgraph Frontend ["💻 Frontend: React + Vite"]
+        WebApp[🌐 M.E.R.I.D.I.A.N. Web App]
+        Web5SDK[⬅️ Web5.js SDK ➡️]
+        Web3Wallet[⬅️ Web3 Wallet ➡️]
+    end
+
+    subgraph Backend_Services ["🧩 Backend Services"]
+        FastAPI[🚀 FastAPI Server]
+
+        subgraph AI_Engine ["🤖 AI Analysis & Processing Engine"]
+            direction LR
+            A1["1️⃣ Data Processing<br/>PII Redaction & Structuring"]
+            A2["2️⃣ Quality Analysis<br/>Scoring & Pricing"]
+            A1 --> A2
+        end
+        PostgreSQL["🗄️ PostgreSQL DB<br/>Public Metadata"]
+    end
+
+    subgraph Web5_Layer ["🌐 Web5 Layer (User-Owned Data)"]
+        ProviderDWN[🏡 Provider's DWN]
+        subgraph ProviderDWN_Data ["📂 Provider DWN Data"]
+            direction LR
+            RawData["📄 Raw Data<br/>(Private)"]
+            ProcessedDataset["📊 Processed Dataset<br/>(Private, For Sale)"]
+        end
+    end
+
+    subgraph Web3_Layer ["⛓️ Web3 Layer (Creditcoin Blockchain)"]
+        Blockchain["💠 Creditcoin Network"]
+        DataLicenseContract["📜 Data License Contract"]
+        LicenseNFT["💎 License NFT"]
+    end
+
+    %% --- FLOWS ---
+    DataProvider -->|"Uses"| WebApp
+    WebApp -->|"1. Connects"| Web5SDK --> ProviderDWN
+    WebApp -->|"2. Uploads Raw Data to"| RawData
+    WebApp -->|"3. Grants Temp Access to AI"| FastAPI
+    FastAPI -->|"Orchestrates"| AI_Engine
+    AI_Engine -->|"Reads"| RawData
+    A1 -->|"Creates"| ProcessedDataset
+    A2 -->|"Returns Score & Price"| FastAPI
+    FastAPI -->|"Stores Listing"| PostgreSQL
+    WebApp -->|"6. Mints License via"| Web3Wallet --> DataLicenseContract
+    DataLicenseContract -->|"on"| Blockchain
+
+    DataBuyer -->|"Uses"| WebApp
+    WebApp -->|"7. Browses Marketplace"| FastAPI
+    WebApp -->|"8. Purchases License via"| Web3Wallet --> DataLicenseContract
+    DataLicenseContract -->|"Mints"| LicenseNFT --> DataBuyer
+
+    WebApp -->|"9. Buyer Requests Access"| ProcessedDataset
+    ProcessedDataset -->|"10. DWN Verifies on"| Blockchain
+    Blockchain -->|"Confirms Buyer Owns"| LicenseNFT
+    ProcessedDataset -->|"11. Grants Read Access"| WebApp
+             </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Tech Stack -->
+    <section id="slide-7" class="slide glow-background">
+        <div class="grid-background"></div>
+        <div class="text-center max-w-5xl mx-auto fade-in">
+             <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">Technology</h2>
+             <h3 class="text-4xl md:text-6xl font-black mb-12">Built with Revolutionary Tech</h3>
+             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                 <div class="card p-6 rounded-2xl">
+                     <h4 class="text-xl font-bold mb-2">Frontend & Identity</h4>
+                     <ul class="text-gray-400 text-sm space-y-2 text-left">
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Web5.js</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>React & Vite</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Ethers.js</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Tailwind CSS</li>
+                     </ul>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <h4 class="text-xl font-bold mb-2">Backend & AI</h4>
+                     <ul class="text-gray-400 text-sm space-y-2 text-left">
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>FastAPI (Python)</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Scikit-learn</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Pandas</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>PostgreSQL</li>
+                     </ul>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <h4 class="text-xl font-bold mb-2">Blockchain</h4>
+                     <ul class="text-gray-400 text-sm space-y-2 text-left">
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Creditcoin</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Solidity</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Hardhat</li>
+                     </ul>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <h4 class="text-xl font-bold mb-2">DevOps</h4>
+                     <ul class="text-gray-400 text-sm space-y-2 text-left">
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Docker</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>GitHub Actions</li>
+                         <li class="flex items-center"><span class="text-primary-color mr-2">◆</span>Bun</li>
+                     </ul>
+                 </div>
+             </div>
+        </div>
+    </section>
+
+    <!-- Slide 8: Market Opportunity -->
+    <section id="slide-8" class="slide">
+        <div class="text-center max-w-4xl mx-auto fade-in">
+             <h2 class="text-sm font-bold uppercase tracking-widest text-primary-color mb-4">Market Opportunity</h2>
+             <h3 class="text-4xl md:text-6xl font-black mb-12">A Multi-Billion Dollar Intersection</h3>
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                 <div class="card p-6 rounded-2xl">
+                     <p class="text-4xl font-black gradient-text">$274B</p>
+                     <p class="text-gray-400 text-sm mt-2">Global Data Market by 2028</p>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <p class="text-4xl font-black gradient-text">$180B</p>
+                     <p class="text-gray-400 text-sm mt-2">Annual Cost of AI Bias</p>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <p class="text-4xl font-black gradient-text">1.4B</p>
+                     <p class="text-gray-400 text-sm mt-2">Unbanked Population</p>
+                 </div>
+                 <div class="card p-6 rounded-2xl">
+                     <p class="text-4xl font-black gradient-text">420M+</p>
+                     <p class="text-gray-400 text-sm mt-2">Web3 Users in 2024</p>
+                 </div>
+             </div>
+             <p class="mt-12 text-lg text-gray-300">We are targeting the intersection of these massive markets, creating a new category of self-sovereign data assets.</p>
+        </div>
+    </section>
+
+    <!-- Slide 9: Call to Action -->
+    <section id="slide-9" class="slide glow-background">
+        <div class="grid-background"></div>
+        <div class="text-center max-w-3xl mx-auto fade-in">
+            <img src="https://raw.githubusercontent.com/chandan989/m.e.r.i.d.i.a.n./dd0d2e5ad86821996628fa4709e0d1742f93b43d/meridian-web/public/logo.svg" alt="M.E.R.I.D.I.A.N. Logo" class="h-20 w-auto mx-auto mb-6">
+            <h3 class="text-4xl md:text-6xl font-black mb-6">Join the Data Revolution.</h3>
+            <p class="text-lg text-gray-400 mb-8">Take the first step towards data sovereignty. Create your Decentralized Identity and join a global community building a fairer digital world.</p>
+            <a href="https://github.com/chandan989/m.e.r.i.d.i.a.n." target="_blank" class="inline-block px-8 py-4 rounded-lg bg-gradient-to-r from-primary-color to-secondary-color text-white font-bold text-lg shadow-lg shadow-primary-color/20 hover:scale-105 transition-transform">
+                Explore the Project on GitHub
+            </a>
+            <p class="text-sm text-gray-500 mt-6">Built for the Creditcoin Moonshot Universe Hackathon.</p>
+        </div>
+    </section>
+    </main>
+
+    <script>
+        // Simple scroll spy for navigation
+        const sections = document.querySelectorAll('.slide');
+        const navLinks = document.querySelectorAll('.slide-nav a');
+        const slidesContainer = document.querySelector('#slides-container');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { root: slidesContainer, threshold: 0.7 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
